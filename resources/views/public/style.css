@@ -1,0 +1,33 @@
+.navbar {
+  background: rgb(94, 240, 245);
+}
+body{
+  background: rgb(203, 247, 239);
+}
+.footer{
+  background: rgba(115, 245, 234, 0.712);
+  padding: 1rem;
+}
+.about-intro{
+  margin-left: 10rem;
+  margin-right: 10rem;
+}
+.carousel-inner{
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+#nextSlide, #prevSlide{
+  width: 7%;
+}
+#recommendedTag{
+  padding-right: 0px;
+}
+#btnPopularBook{
+  width: 10rem;
+}
+#popularTag{
+  padding-left: 0px;
+}
+#btnRecommendedBook{
+  width: 10rem;
+}
