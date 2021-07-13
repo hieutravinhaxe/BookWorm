@@ -114,5 +114,7 @@
                 </div>
             </div>
         </div>
+        <div id="root"></div>
+        <script src="{{asset('js/app.jxs')}}" ></script>
     </body>
 </html>
