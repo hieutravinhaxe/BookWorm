@@ -5,22 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Review;
-use \Carbon\Carbon;
+use App\Models\Category;
 
-class ReviewApiController extends Controller
+class CategoryApiController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id, Request $request)
+    public function index()
     {
-        $page = $request->has('page') ? $request->get('page') : 1;
-        $limit = $request->has('limit') ? $request->get('limit') : 5;
-        return $request->query('orderDate')==1?Review::where('book_id',$id)->orderBy('review_date')->limit($limit)->offset(($page - 1) * $limit)->get():
-                                               Review::where('book_id',$id)->orderBy('review_date','DESC')->limit($limit)->offset(($page - 1) * $limit)->get();
+        return Category::get(['categories.id','categories.category_name']);
     }
 
     /**
@@ -31,14 +27,7 @@ class ReviewApiController extends Controller
      */
     public function store(Request $request)
     {
-        $review = new Review();
-        $review->book_id = $request->post('bookId');
-        $review->review_title = $request->post('title');
-        $review->rating_start = $request->post('rate');
-        $review->rating_details = $request->post('details');
-        $review->review_date = Carbon::now()->format('Y-m-d H:m:s');
-        $review->save();
-        return $review
+        //
     }
 
     /**
