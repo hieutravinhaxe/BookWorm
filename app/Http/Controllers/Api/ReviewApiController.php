@@ -38,7 +38,7 @@ class ReviewApiController extends Controller
         $review->rating_details = $request->post('details');
         $review->review_date = Carbon::now()->format('Y-m-d H:m:s');
         $review->save();
-        return $review
+        return $review;
     }
 
     /**
