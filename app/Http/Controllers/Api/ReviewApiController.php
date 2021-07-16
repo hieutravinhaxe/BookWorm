@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Review;
 use \Carbon\Carbon;
+use Mockery\Undefined;
 
 class ReviewApiController extends Controller
 {
@@ -18,9 +19,18 @@ class ReviewApiController extends Controller
     public function index($id, Request $request)
     {
         $page = $request->has('page') ? $request->get('page') : 1;
-        $limit = $request->has('limit') ? $request->get('limit') : 5;
-        return $request->query('orderDate')==1?Review::where('book_id',$id)->orderBy('review_date')->limit($limit)->offset(($page - 1) * $limit)->get():
-                                               Review::where('book_id',$id)->orderBy('review_date','DESC')->limit($limit)->offset(($page - 1) * $limit)->get();
+        $limit = $request->has('limit') ? $request->get('limit') : 10;
+        $rate = $request->has('rate')? $request->get('rate'):0;
+        $order = $request->has('orderDate')?$request->get('orderDate'):0;
+        
+        return Review::where('book_id',$id)
+            ->filterStar($rate)
+            ->orderDate($order)
+            ->limit($limit)
+            ->offset(($page - 1) * $limit)
+            ->get();
+        
+        
     }
 
     /**

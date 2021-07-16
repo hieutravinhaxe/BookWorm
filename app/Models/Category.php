@@ -12,4 +12,5 @@ class Category extends Model
     public $timestamps = false;
 
     protected $table = 'categories';
+    
 }

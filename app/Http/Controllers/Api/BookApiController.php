@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use \DB;
+use App\Models\Author;
+use App\Models\Category;
 
 class BookApiController extends Controller
 {
@@ -65,7 +67,21 @@ class BookApiController extends Controller
      */
     public function show(Book $book)
     {
-        return $book;
+        $b =  Book::select('books.id','books.book_price','books.book_title','books.book_summary')
+                    ->where('books.id','=',$book->id)
+                    ->allPrice()
+                    ->avgStar()
+                    ->groupBy('books.id')
+                    ->get();
+        
+        $author = Author::find($book->author_id);
+        $category = Category::find($book->category_id);
+
+        return response([
+            'book' => $b->first(),
+            'author' => $author,
+            'category' =>$category
+        ]);
     }
 
     /**

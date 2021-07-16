@@ -16,7 +16,7 @@ class Book extends Model
 
     public function author()
     {
-        return $this->hasOne(Author::class);
+        return $this->hasOne(Author::class,'book_id');
     }
 
     public function reviews()
@@ -37,7 +37,7 @@ class Book extends Model
     public function scopeAvgStar($query)
     {
         return $query->addSelect(DB::raw('coalesce(sum(cast(reviews.rating_start as integer))/count(*),0) as avg_rate'))
-                    ->addSelect(DB::raw('coalesce(sum(cast(reviews.rating_start as integer)),0) as num_reviews'))
+                    ->addSelect(DB::raw('coalesce(count(*),0) as num_reviews'))
                     ->leftJoin('reviews', 'reviews.book_id', 'books.id');
     }
 
