@@ -2,23 +2,18 @@ import React, { useState } from "react";
 import logo from "../../../../assets/bookworm_icon.svg";
 import "./nav.css";
 import { Link } from "react-router-dom";
+import {Button} from 'reactstrap';
 import {
-    Button,
     Collapse,
     Navbar,
     NavbarToggler,
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    NavbarText
+    NavLink
 } from "reactstrap";
 
-export default function Navigation() {
+function Navigation (pros) {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = () => setIsOpen(!isOpen);
@@ -27,31 +22,36 @@ export default function Navigation() {
         <div>
             <Navbar color="light" light expand="md">
                 <NavbarBrand href="/">
-                    <img
-                    src={logo}
-                    />
+                    <img src={logo} />
                 </NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="mr-auto w-100 justify-content-end" navbar>
-                        <NavItem>
-                            <NavLink href="/">
-                                Home
-                            </NavLink>
+                        <NavItem className="mr-1">
+                            <Link to="/">
+                                <Button className="btn-light bg-light">Home</Button>
+                            </Link>
                         </NavItem>
-                        <NavItem>
-                            <NavLink href="/">
-                                Shop
-                            </NavLink>
+                        <NavItem className="mr-1">
+                            <Link to="/">
+                            <Button className="btn-light bg-light">Shop</Button>
+                            </Link>
                         </NavItem>
-                        <NavItem>
-                            <NavLink href="/">
-                                Cart
-                            </NavLink>
+                        <NavItem className="mr-1">
+                            <Link to="/about">
+                            <Button className="btn-light bg-light">About</Button>
+                            </Link>
+                        </NavItem>
+                        <NavItem className="mr-1">
+                            <Link to="/">
+                            <Button className="btn-light bg-light">Cart<span className="cartItems">(1)</span></Button>
+                            </Link>
                         </NavItem>
                     </Nav>
                 </Collapse>
             </Navbar>
         </div>
     );
-}
+};
+
+export default Navigation;

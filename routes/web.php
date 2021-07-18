@@ -14,7 +14,7 @@ use App\Http\Controllers\RenderViewController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-//Route::get('{path?}',RenderViewController::class)->where('path','[a-zA-Z-9-/]+');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('{path?}', RenderViewController::class)->where('path', '[a-zA-Z0-9-/]+');
