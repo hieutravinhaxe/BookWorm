@@ -1,6 +1,5 @@
 import React from "react";
 import "./BookCard.css";
-import book1 from "../../../../../public/images/book1.jpg";
 import {
     Card,
     CardImg,
@@ -11,10 +10,19 @@ import {
 } from "reactstrap";
 
 export default function BookCard(props) {
+
+    function getImage($image){
+        if($image===null){
+            return "/images/book1.jpg";
+        }else{
+            return "/images/"+$image+".jpg";
+        }
+    }
+
     return (
-        <div>
-        <Card style={{height:"500px"}} className="m-2 w-70">
-            <CardImg top src={book1} alt="Card image cap" className="w-100"/>
+        <>
+        <Card style={{height:"31rem"}} className="m-2 w-70">
+            <CardImg height="50%" top src={getImage(props.bookImage)} alt="Card image cap" className="w-100"/>
             <CardBody>
                 <CardTitle className="font-weight-bold">{props.bookTitle}</CardTitle>
                 <CardText>{props.bookAuthor}</CardText>
@@ -30,6 +38,6 @@ export default function BookCard(props) {
                 </div>
             </CardFooter>
         </Card>
-        </div>
+        </>
     );
 }

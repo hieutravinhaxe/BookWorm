@@ -16,7 +16,7 @@ class CategoryApiController extends Controller
      */
     public function index()
     {
-        return Category::get(['categories.id','categories.category_name']);
+        return Category::orderBy('category_name')->get(['categories.id','categories.category_name']);
     }
 
     /**

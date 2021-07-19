@@ -13,13 +13,3 @@ const mix = require('laravel-mix');
 
 mix.sass('resources/css/app.scss', 'public/css');
 mix.js('resources/js/app.jsx', 'public/js').react();
-// mix.js('resources/js/app.js', 'public/js')
-//     .react()
-//     .sass('resources/css/app.scss', 'public/css');
-
-// mix.sass('resources/css/app.scss', 'public/css');
-// mix.js('resources/js/app.jsx', 'public/js').react();
-
-// mix.js('resources/js/app.js','public/js')
-//     .react()
-//     .version();

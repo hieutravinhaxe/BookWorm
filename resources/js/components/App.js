@@ -4,7 +4,7 @@ import Footer from "./generals/Footer";
 import Navigation from "./generals/Nav";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import BookCard from "./generals/BookCard";
+import Shop from "./pages/Shop";
 import { BrowserRouter,Switch, Route } from "react-router-dom";
 
 function App() {
@@ -18,6 +18,9 @@ function App() {
                 </Route>
                 <Route axact path="/about">
                     <About/>
+                </Route>
+                <Route exact path="/shop">
+                    <Shop/>
                 </Route>
                 </Switch>
                 <Footer />

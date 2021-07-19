@@ -107,4 +107,16 @@ class Book extends Model
             return $query->orderByRaw('num_reviews DESC');
         }
     }
+
+    public function scopeOrderRate($query, $order){
+        if($order===null){
+            return $query;
+        }
+        else if($order==0){
+            return $query->orderByRaw('avg_rate');
+        }
+        else{
+            return $query->orderByRaw('avg_rate DESC');
+        }
+    }
 }

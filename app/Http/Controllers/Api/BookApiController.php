@@ -23,6 +23,7 @@ class BookApiController extends Controller
         $orderByNumReviews = $req->has('orderReviews')? $req->get('orderReviews'):null;
         $orderByFinalPrice = $req->has('orderFPrice')? $req->get('orderFPrice'):null;
         $orderBySubPrice = $req->has('orderSPrice')? $req->get('orderSPrice'):null;
+        $orderByRate = $req->has('orderRate')? $req->get('orderRate'):null;
         $filterByAuthor = $req->has('author')? $req->get('author'):0;
         $filterByCategory = $req->has('category')? $req->get('category'):0;
         $filterByRate = $req->has('rate')? $req->get('rate'):0;
@@ -33,6 +34,7 @@ class BookApiController extends Controller
                     ->filterAuthor($filterByAuthor)
                     ->filterCate($filterByCategory)
                     ->filterRate($filterByRate)
+                    ->orderRate($orderByRate)
                     ->orderByNumReviews($orderByNumReviews)
                     ->orderByFinalPrice($orderByFinalPrice)
                     ->orderBySubPrice($orderBySubPrice)

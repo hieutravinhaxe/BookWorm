@@ -15,7 +15,7 @@ class AuthorApiController extends Controller
      */
     public function index()
     {
-        return Author::get(['authors.id','authors.author_name']);
+        return Author::orderBy('authors.author_name')->get(['authors.id','authors.author_name']);
     }
 
     /**

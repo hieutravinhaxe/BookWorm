@@ -33,7 +33,7 @@ function Navigation (pros) {
                             </Link>
                         </NavItem>
                         <NavItem className="mr-1">
-                            <Link to="/">
+                            <Link to="/shop">
                             <Button className="btn-light bg-light">Shop</Button>
                             </Link>
                         </NavItem>
