@@ -5,7 +5,7 @@ import {Container, Row, Col} from "reactstrap";
 
 export default function About() {
     return (
-        <div className="about p-5">
+        <div className="about p-5 mt-4">
             <h4>About Us</h4>
             <hr className="w-100" />
             <h2 className="text-center ">Welcome to Bookworm</h2>

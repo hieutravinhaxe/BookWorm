@@ -24,7 +24,7 @@ export default class Home extends Component {
     initOnSaleData() {
         axios
             .get(
-                `http://127.0.0.1:8000/api/books?limit=10&page=1&orderSPrice=0`
+                `http://127.0.0.1:8000/api/books?limit=10&page=1&orderSPrice=1`
             )
             .then(res => {
                 //const bookOnSale = res.data;

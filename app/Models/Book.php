@@ -53,7 +53,7 @@ class Book extends Model
         })
             ->groupBy('discounts.discount_price')
             ->addSelect(DB::raw('coalesce(discounts.discount_price,0) as discount_price'))
-            ->addSelect(DB::raw('coalesce(books.book_price - discounts.discount_price,books.book_price) as sub_price'))
+            ->addSelect(DB::raw('coalesce(books.book_price - coalesce(discounts.discount_price,books.book_price),books.book_price) as sub_price'))
             ->addSelect(DB::raw('coalesce(discounts.discount_price, books.book_price) as final_price'));
         
     }

@@ -87,7 +87,7 @@ export default function FeaturedBooks() {
                             {recomData.map(d => (
                                 <Col lg="3" md="6" sm="12" className="mb-3" key={d.id}>
                                     <BookCard
-                                        key={d.id}
+                                        bookId={d.id}
                                         bookTitle={d.book_title}
                                         bookAuthor={d.author_name}
                                         finalPrice={d.final_price}
@@ -105,7 +105,7 @@ export default function FeaturedBooks() {
                             {popularData.map(d => (
                                 <Col lg="3" md="6" sm="12" className="mb-3" key={d.id}>
                                     <BookCard
-                                        key={d.id}
+                                        bookId={d.id}
                                         bookTitle={d.book_title}
                                         bookAuthor={d.author_name}
                                         finalPrice={d.final_price}

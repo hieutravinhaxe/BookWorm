@@ -8,20 +8,21 @@ import {
     ButtonDropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem
+    DropdownItem,
+    Pagination,
+    PaginationItem,
+    PaginationLink
 } from "reactstrap";
 
+import {
+    Accordion,
+    Button,
+    ButtonGroup
+} from "react-bootstrap";
+import BookCard from "../../generals/BookCard";
+
 export default function Shop() {
-    // handle click drop down
-    const [dropdownOpenAuthor, setOpenAuthor] = useState(false);
-    const toggleAuthor = () => setOpenAuthor(!dropdownOpenAuthor);
-
-    const [dropdownOpenCate, setOpenCate] = useState(false);
-    const toggleCate = () => setOpenCate(!dropdownOpenCate);
-
-    const [dropdownOpenStar, setOpenStar] = useState(false);
-    const toggleStar = () => setOpenStar(!dropdownOpenStar);
-
+   
     const [dropdownOpenOrder, setOpenOrder] = useState(false);
     const toggleOrder = () => setOpenOrder(!dropdownOpenOrder);
 
@@ -37,25 +38,77 @@ export default function Shop() {
     const [categoryBy, setCategoryBy] = useState(0);
     const [rateBy, setRateBy] = useState(0);
     const [showBy, setShowBy] = useState(15);
-    const [sortBySale, setSortBySale] = useState(null);
-    const [sortByPopu, setSortByPopu] = useState(null);
-    const [sortByPrice, setSortByPrice] = useState(null);
+    const [sortBy, setSortBy] = useState(0);
 
+    // books list
     const [bookList, setBookList] = useState([]);
+
+    //breadcrumb
+    const [breadcrumbStar, setBreadStar] = useState(null);
+    const [breadcrumbAuthor, setBreadAuthor] = useState(null);
+    const [breadcrumbCate, setBreadCate] = useState(null);
+
+    //from -to -total
+    const [stateFrom, setStateFrom] = useState(0);
+    const [stateTo, setStateTo] = useState(0);
+    const [stateTotal, setStateTotal] = useState(0);
+    const [statePages, setStatePages] = useState(0);
+    const [stateCurrentPage, setStateCurrentPage] = useState(1);
+    const [listPages, setListPages] = useState([]);
 
     useEffect(() => {
         initAuthorList();
         initCategotyList();
         initBookList();
-    }, []);
+    }, [rateBy, categoryBy, authorBy, showBy, sortBy, stateCurrentPage]);
 
-    function initBookList(){
-        
+    function initBookList() {
+        let url = "/api/books";
+        url = url + "?limit=" + showBy + "&page=" + stateCurrentPage;
+        if (rateBy != 0 && rateBy != null) {
+            url = url + "&rate=" + rateBy;
+        }
+        if (authorBy != 0 && authorBy != null) {
+            url = url + "&author=" + authorBy;
+        }
+        if (categoryBy != 0 && categoryBy != null) {
+            url = url + "&category=" + categoryBy;
+        }
+        if (sortBy == 1) {
+            url = url + "&orderSPrice=1";
+        } else if (sortBy == 2) {
+            url = url + "&orderReview=1&orderFPrice=0";
+        } else if (sortBy == 3) {
+            url = url + "&orderFPrice=0";
+        } else if (sortBy == 4) {
+            url = url + "&orderFPrice=1";
+        }
+        axios
+            .get(url)
+            .then(res => {
+                if (res.status === 200) {
+                    setStateFrom(res.data.from);
+                    setStateTo(res.data.to);
+                    setStateTotal(res.data.total);
+                    setStatePages(res.data.totalPages);
+                    setBookList(res.data.data);
+                    if (res.data.totalPages > 20) {
+                        setListPages([...Array(20).keys()].map(i => 1 + i));
+                    } else {
+                        setListPages(
+                            [...Array(res.data.totalPages).keys()].map(
+                                i => 1 + i
+                            )
+                        );
+                    }
+                }
+            })
+            .catch(error => console.log(error));
     }
 
     function initAuthorList() {
         axios
-            .get("http://127.0.0.1:8000/api/authors")
+            .get("/api/authors")
             .then(res => {
                 if (res.status === 200) {
                     setAuthorList(res.data);
@@ -66,7 +119,7 @@ export default function Shop() {
 
     function initCategotyList() {
         axios
-            .get("http://127.0.0.1:8000/api/categories")
+            .get("/api/categories")
             .then(res => {
                 if (res.status === 200) {
                     setCategoryList(res.data);
@@ -75,16 +128,68 @@ export default function Shop() {
             .catch(error => console.log(error));
     }
 
+    function setFilterRate($rate) {
+        setRateBy($rate);
+        if ($rate !== null) {
+            setBreadStar("Filter by : " + $rate + " stars");
+        } else {
+            setBreadStar(null);
+        }
+    }
+
+    function setFilterAuthor($author, $authorName) {
+        setAuthorBy($author);
+        if ($authorName !== null) {
+            setBreadAuthor("Filter author by : " + $authorName);
+        } else {
+            setBreadAuthor(null);
+        }
+    }
+
+    function setFilterCate($cate, $cateName) {
+        setCategoryBy($cate);
+        if ($cateName !== null) {
+            setBreadCate("Filter category by: " + $cateName);
+        } else {
+            setBreadCate(null);
+        }
+    }
+
+    function setItemPerPage($num) {
+        setShowBy($num);
+        setStateCurrentPage(1);
+    }
+
+    function setSort($s) {
+        setSortBy($s);
+    }
+
+    function changePage($p) {
+        setStateCurrentPage($p);
+    }
+
     return (
         <>
-            <div className="shopzen pt-5 px-5">
+            <div className="shopzen pt-5 px-5 mt-3">
                 <Breadcrumb>
                     <BreadcrumbItem active>
                         <h3>Books</h3>
                     </BreadcrumbItem>
-                    <BreadcrumbItem active className="pt-2">
-                        author
-                    </BreadcrumbItem>
+                    {breadcrumbAuthor !== null && (
+                        <BreadcrumbItem active className="pt-2">
+                            {breadcrumbAuthor}
+                        </BreadcrumbItem>
+                    )}
+                    {breadcrumbCate !== null && (
+                        <BreadcrumbItem active className="pt-2">
+                            {breadcrumbCate}
+                        </BreadcrumbItem>
+                    )}
+                    {breadcrumbStar !== null && (
+                        <BreadcrumbItem active className="pt-2">
+                            {breadcrumbStar}
+                        </BreadcrumbItem>
+                    )}
                 </Breadcrumb>
 
                 <hr className="w-100" />
@@ -93,63 +198,111 @@ export default function Shop() {
                 <Row>
                     <Col md="3">
                         <h4 className="ml-4">Filter by</h4>
-                        <ButtonDropdown
-                            isOpen={dropdownOpenAuthor}
-                            toggle={toggleAuthor}
-                            className="w-100 mb-4"
-                        >
-                            <DropdownToggle caret color="primary" outline>
+                        <Accordion defaultActiveKey="0">
+                            <Accordion.Toggle
+                                as={Button}
+                                variant="outline-primary"
+                                eventKey="0"
+                                className="w-100 mb-3"
+                            >
                                 Authors
-                            </DropdownToggle>
-                            <DropdownMenu className="w-100">
-                                <DropdownItem>All</DropdownItem>
-                                {authorList.map(d => (
-                                    <DropdownItem key={d.id}>
-                                        {d.author_name}
-                                    </DropdownItem>
-                                ))}
-                            </DropdownMenu>
-                        </ButtonDropdown>
-                        <ButtonDropdown
-                            isOpen={dropdownOpenCate}
-                            toggle={toggleCate}
-                            className="w-100 mb-4"
-                        >
-                            <DropdownToggle caret color="primary" outline>
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="0" className="mb-2">
+                                <ButtonGroup vertical className="w-100">
+                                    <Button
+                                        onClick={() =>
+                                            setFilterAuthor(null, null)
+                                        }
+                                    >
+                                        All
+                                    </Button>
+                                    {authorList.map(d => (
+                                        <Button
+                                            onClick={() =>
+                                                setFilterAuthor(
+                                                    d.id,
+                                                    d.author_name
+                                                )
+                                            }
+                                            key={d.id}
+                                        >
+                                            {d.author_name}
+                                        </Button>
+                                    ))}
+                                </ButtonGroup>
+                            </Accordion.Collapse>
+                            <Accordion.Toggle
+                                as={Button}
+                                variant="outline-primary"
+                                eventKey="1"
+                                className="w-100 mb-3"
+                            >
                                 Categories
-                            </DropdownToggle>
-                            <DropdownMenu className="w-100">
-                                <DropdownItem>All</DropdownItem>
-                                {categoryList.map(c => (
-                                    <DropdownItem key={c.id}>
-                                        {c.category_name}
-                                    </DropdownItem>
-                                ))}
-                            </DropdownMenu>
-                        </ButtonDropdown>
-                        <ButtonDropdown
-                            isOpen={dropdownOpenStar}
-                            toggle={toggleStar}
-                            className="w-100 mb-4"
-                        >
-                            <DropdownToggle caret color="primary" outline>
-                                Stars
-                            </DropdownToggle>
-                            <DropdownMenu className="w-100">
-                                <DropdownItem>All</DropdownItem>
-                                <DropdownItem>1 Star</DropdownItem>
-                                <DropdownItem>2 Stars</DropdownItem>
-                                <DropdownItem>3 Stars</DropdownItem>
-                                <DropdownItem>4 Stars</DropdownItem>
-                                <DropdownItem>5 Stars</DropdownItem>
-                            </DropdownMenu>
-                        </ButtonDropdown>
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="1" className="mb-2">
+                                <ButtonGroup vertical className="w-100">
+                                    <Button
+                                        onClick={() =>
+                                            setFilterCate(null, null)
+                                        }
+                                    >
+                                        All
+                                    </Button>
+                                    {categoryList.map(c => (
+                                        <Button
+                                            onClick={() =>
+                                                setFilterCate(
+                                                    c.id,
+                                                    c.category_name
+                                                )
+                                            }
+                                            key={c.id}
+                                        >
+                                            {c.category_name}
+                                        </Button>
+                                    ))}
+                                </ButtonGroup>
+                            </Accordion.Collapse>
+                            <Accordion.Toggle
+                                as={Button}
+                                variant="outline-primary"
+                                eventKey="2"
+                                className="w-100 mb-3"
+                            >
+                                Rating
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="2" className="mb-2">
+                                <ButtonGroup vertical className="w-100">
+                                    <Button onClick={() => setFilterRate(null)}>
+                                        All rating
+                                    </Button>
+                                    <Button onClick={() => setFilterRate(1)}>
+                                        1 star
+                                    </Button>
+                                    <Button onClick={() => setFilterRate(2)}>
+                                        2 stars
+                                    </Button>
+                                    <Button onClick={() => setFilterRate(3)}>
+                                        3 stars
+                                    </Button>
+                                    <Button onClick={() => setFilterRate(4)}>
+                                        4 stars
+                                    </Button>
+                                    <Button onClick={() => setFilterRate(5)}>
+                                        5 stars
+                                    </Button>
+                                </ButtonGroup>
+                            </Accordion.Collapse>
+                        </Accordion>
                     </Col>
                     <Col md="9">
                         <div className="container-fluid">
                             <Row className="mb-4">
                                 <Col md="6" className="d-flex">
-                                    <p>Show 1-12 of 126 books</p>
+                                    <p>
+                                        Show {stateTotal > 0 ? stateFrom : 0}-
+                                        {stateTo} of {stateTotal} books
+                                    </p>
                                 </Col>
                                 <Col className="d-flex flex-row-reverse">
                                     <ButtonDropdown
@@ -165,10 +318,34 @@ export default function Shop() {
                                             Show
                                         </DropdownToggle>
                                         <DropdownMenu className="w-100">
-                                            <DropdownItem>Show 5</DropdownItem>
-                                            <DropdownItem>Show 15</DropdownItem>
-                                            <DropdownItem>Show 20</DropdownItem>
-                                            <DropdownItem>Show 25</DropdownItem>
+                                            <DropdownItem
+                                                onClick={() =>
+                                                    setItemPerPage(5)
+                                                }
+                                            >
+                                                Show 5
+                                            </DropdownItem>
+                                            <DropdownItem
+                                                onClick={() =>
+                                                    setItemPerPage(15)
+                                                }
+                                            >
+                                                Show 15
+                                            </DropdownItem>
+                                            <DropdownItem
+                                                onClick={() =>
+                                                    setItemPerPage(20)
+                                                }
+                                            >
+                                                Show 20
+                                            </DropdownItem>
+                                            <DropdownItem
+                                                onClick={() =>
+                                                    setItemPerPage(25)
+                                                }
+                                            >
+                                                Show 25
+                                            </DropdownItem>
                                         </DropdownMenu>
                                     </ButtonDropdown>
                                     <ButtonDropdown
@@ -184,21 +361,97 @@ export default function Shop() {
                                             Sort by
                                         </DropdownToggle>
                                         <DropdownMenu className="w-100">
-                                            <DropdownItem>
+                                            <DropdownItem
+                                                onClick={() => setSort(0)}
+                                            >
+                                                Nomal
+                                            </DropdownItem>
+                                            <DropdownItem
+                                                onClick={() => setSort(1)}
+                                            >
                                                 Sort by on sale
                                             </DropdownItem>
-                                            <DropdownItem>
+                                            <DropdownItem
+                                                onClick={() => setSort(2)}
+                                            >
                                                 Sort by popularity
                                             </DropdownItem>
-                                            <DropdownItem>
+                                            <DropdownItem
+                                                onClick={() => setSort(3)}
+                                            >
                                                 Sort by price: low to high
                                             </DropdownItem>
-                                            <DropdownItem>
+                                            <DropdownItem
+                                                onClick={() => setSort(4)}
+                                            >
                                                 Sort by price: high to low
                                             </DropdownItem>
                                         </DropdownMenu>
                                     </ButtonDropdown>
                                 </Col>
+                            </Row>
+                            <Row>
+                                {bookList.map(d => (
+                                    <Col
+                                        lg="3"
+                                        md="6"
+                                        sm="12"
+                                        className="mb-3"
+                                        key={d.id}
+                                    >
+                                        <BookCard
+                                            bookId={d.id}
+                                            bookTitle={d.book_title}
+                                            bookAuthor={d.author_name}
+                                            finalPrice={d.final_price}
+                                            bookPrice={d.book_price}
+                                            bookImage={d.book_cover_photo}
+                                        ></BookCard>
+                                    </Col>
+                                ))}
+                            </Row>
+                            <Row className="justify-content-center">
+                                <Pagination aria-label="Page navigation example">
+                                    <PaginationItem>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                changePage(
+                                                    stateCurrentPage == 1
+                                                        ? 1
+                                                        : stateCurrentPage - 1
+                                                )
+                                            }
+                                            first
+                                            href=""
+                                        />
+                                    </PaginationItem>
+                                    {listPages.map((l, index) => (
+                                        <PaginationItem key={index}>
+                                            <PaginationLink
+                                                onClick={() =>
+                                                    changePage(index + 1)
+                                                }
+                                                href=""
+                                            >
+                                                {index + 1}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    ))}
+                                    <PaginationItem>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                changePage(
+                                                    stateCurrentPage ==
+                                                        statePages
+                                                        ? stateCurrentPage
+                                                        : stateCurrentPage + 1
+                                                )
+                                            }
+                                            last
+                                            href=""
+                                        />
+                                    </PaginationItem>
+                                </Pagination>
                             </Row>
                         </div>
                     </Col>

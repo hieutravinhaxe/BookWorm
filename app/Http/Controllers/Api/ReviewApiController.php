@@ -19,18 +19,43 @@ class ReviewApiController extends Controller
     public function index($id, Request $request)
     {
         $page = $request->has('page') ? $request->get('page') : 1;
-        $limit = $request->has('limit') ? $request->get('limit') : 10;
+        $limit = $request->has('limit') ? $request->get('limit') : 5;
         $rate = $request->has('rate')? $request->get('rate'):0;
         $order = $request->has('orderDate')?$request->get('orderDate'):0;
         
-        return Review::where('book_id',$id)
+        $reviews =  Review::where('book_id',$id)
             ->filterStar($rate)
-            ->orderDate($order)
-            ->limit($limit)
-            ->offset(($page - 1) * $limit)
-            ->get();
-        
-        
+            ->orderDate($order);
+
+        $total = $reviews->get()->count();
+
+        $star1 = Review::where('book_id',$id)
+                ->where('rating_start','1')->get()->count();
+        $star2 = Review::where('book_id',$id)
+                ->where('rating_start','2')->get()->count();
+        $star3 = Review::where('book_id',$id)
+                ->where('rating_start','3')->get()->count();
+        $star4 = Review::where('book_id',$id)
+                ->where('rating_start','4')->get()->count();
+        $star5 = Review::where('book_id',$id)
+                ->where('rating_start','5')->get()->count();
+
+
+        return response([
+            'total' => $total,
+            'page' => $page,
+            'totalPages' => ceil($total/$limit),
+            'from' => ($limit*$page-$limit)+1,
+            'to' => ($limit*$page)>$total?$total:($limit*$page),
+            'data' => $reviews->limit($limit)
+                                ->offset(($page - 1) * $limit)
+                                ->get(),
+            'star1' =>$star1,
+            'star2' => $star2,
+            'star3' => $star3,
+            'star4' => $star4,
+            'star5' => $star5
+        ]);
     }
 
     /**

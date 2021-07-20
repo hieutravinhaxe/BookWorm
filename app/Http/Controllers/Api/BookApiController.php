@@ -19,7 +19,7 @@ class BookApiController extends Controller
     public function index(Request $req)
     {
         $page = $req->has('page') ? $req->get('page') : 1;
-        $limit = $req->has('limit') ? $req->get('limit') : 10;
+        $limit = $req->has('limit') ? $req->get('limit') : 15;
         $orderByNumReviews = $req->has('orderReviews')? $req->get('orderReviews'):null;
         $orderByFinalPrice = $req->has('orderFPrice')? $req->get('orderFPrice'):null;
         $orderBySubPrice = $req->has('orderSPrice')? $req->get('orderSPrice'):null;
@@ -38,11 +38,13 @@ class BookApiController extends Controller
                     ->orderByNumReviews($orderByNumReviews)
                     ->orderByFinalPrice($orderByFinalPrice)
                     ->orderBySubPrice($orderBySubPrice)
+                    ->orderBy('books.book_title')
                     ->leftJoin('authors','authors.id','books.author_id');
         $total = $result->get()->count();
         return response([
             'total' => $total,
             'page' => $page,
+            'totalPages' => ceil($total/$limit),
             'from' => ($limit*$page-$limit)+1,
             'to' => ($limit*$page)>$total?$total:($limit*$page),
             'data' => $result->limit($limit)

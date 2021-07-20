@@ -19,8 +19,8 @@ function Navigation (pros) {
     const toggle = () => setIsOpen(!isOpen);
 
     return (
-        <div>
-            <Navbar color="light" light expand="md">
+        <>
+            <Navbar color="light" light expand="md" className="fixed-top">
                 <NavbarBrand href="/">
                     <img src={logo} />
                 </NavbarBrand>
@@ -50,7 +50,7 @@ function Navigation (pros) {
                     </Nav>
                 </Collapse>
             </Navbar>
-        </div>
+        </>
     );
 };
 

@@ -16,7 +16,7 @@ class Review extends Model
     }
 
     public function scopeFilterStar($query, $star){
-        if($star===0){
+        if($star==0){
             return $query->whereNotNull('rating_start');
         }
         else{
