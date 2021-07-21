@@ -13,6 +13,7 @@ import {
 import classnames from "classnames";
 import "./home.css";
 import BookCard from "../../generals/BookCard";
+import { Button } from "react-bootstrap";
 
 
 export default function FeaturedBooks() {
@@ -59,25 +60,25 @@ export default function FeaturedBooks() {
         <Container className="featuredBooks mt-5">
             <h3 className="text-center">Feature Book</h3>
             <Nav tabs className="justify-content-center">
-                <NavItem>
-                    <NavLink
+                <NavItem className="mb-3 mr-1">
+                    <Button
                         className={classnames({ active: activeTab === "1" })}
                         onClick={() => {
                             toggle("1");
                         }}
                     >
-                        Recommended
-                    </NavLink>
+                    Recommended
+                    </Button>
                 </NavItem>
                 <NavItem>
-                    <NavLink
+                    <Button
                         className={classnames({ active: activeTab === "2" })}
                         onClick={() => {
                             toggle("2");
                         }}
                     >
                         Popular
-                    </NavLink>
+                    </Button>
                 </NavItem>
             </Nav>
             <TabContent activeTab={activeTab}>

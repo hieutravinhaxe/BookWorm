@@ -28,7 +28,7 @@ export default function BookCard(props) {
 
     return (
         <>
-            <Card style={{ height: "31rem" }} className="m-2 w-70" onClick={()=>changeToProduct(props.bookId)}>
+            <Card style={{ height: "30rem" }} className="m-2 w-70" onClick={()=>changeToProduct(props.bookId)}>
                 <CardImg
                     height="50%"
                     top

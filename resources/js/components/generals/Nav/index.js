@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import logo from "../../../../assets/bookworm_icon.svg";
 import "./nav.css";
-import { Link } from "react-router-dom";
-import {Button} from 'reactstrap';
+import { useLocation } from "react-router-dom";
 import {
     Collapse,
     Navbar,
@@ -13,10 +12,17 @@ import {
     NavLink
 } from "reactstrap";
 
-function Navigation (pros) {
+function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = () => setIsOpen(!isOpen);
+
+    let location = useLocation();
+
+    const homeClass = location.pathname === "/" ? "activeLink" : "";
+    const aboutClass = location.pathname.match(/^\/about/) ? "activeLink" : "";
+    const shopClass = location.pathname.match(/^\/shop/) ? "activeLink" : "";
+    const cartClass = location.pathname.match(/^\/cart/) ? "activeLink" : "";
 
     return (
         <>
@@ -28,30 +34,30 @@ function Navigation (pros) {
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="mr-auto w-100 justify-content-end" navbar>
                         <NavItem className="mr-1">
-                            <Link to="/">
-                                <Button className="btn-light bg-light">Home</Button>
-                            </Link>
+                            <NavLink className={homeClass} href="/">
+                                Home
+                            </NavLink>
                         </NavItem>
                         <NavItem className="mr-1">
-                            <Link to="/shop">
-                            <Button className="btn-light bg-light">Shop</Button>
-                            </Link>
+                            <NavLink className={shopClass} href="/shop">
+                                Shop
+                            </NavLink>
                         </NavItem>
                         <NavItem className="mr-1">
-                            <Link to="/about">
-                            <Button className="btn-light bg-light">About</Button>
-                            </Link>
+                            <NavLink className={aboutClass} href="/about">
+                                About
+                            </NavLink>
                         </NavItem>
                         <NavItem className="mr-1">
-                            <Link to="/">
-                            <Button className="btn-light bg-light">Cart<span className="cartItems">(1)</span></Button>
-                            </Link>
+                            <NavLink className={cartClass} href="/">
+                                Cart<span className="cartItems">(1)</span>
+                            </NavLink>
                         </NavItem>
                     </Nav>
                 </Collapse>
             </Navbar>
         </>
     );
-};
+}
 
 export default Navigation;

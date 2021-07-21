@@ -72,7 +72,7 @@ class BookApiController extends Controller
      */
     public function show(Book $book)
     {
-        $b =  Book::select('books.id','books.book_price','books.book_title','books.book_summary')
+        $b =  Book::select('books.id','books.book_price','books.book_title','books.book_summary','books.book_cover_photo')
                     ->where('books.id','=',$book->id)
                     ->allPrice()
                     ->avgStar()

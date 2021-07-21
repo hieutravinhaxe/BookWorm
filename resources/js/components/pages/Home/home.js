@@ -4,6 +4,7 @@ import BookCard from "../../generals/BookCard";
 import Carousel from "react-elastic-carousel";
 import { Row, Col, Container, Button } from "reactstrap";
 import FeaturedBooks from "./FeaturedBooks.js";
+import './home.css';
 
 const breakPoints = [
     { width: 1, itemsToShow: 1 },
@@ -32,7 +33,7 @@ export default function Home() {
     }
     return (
         <>
-            <Container className="onSale bg-light mt-5">
+            <Container className="onSale bg-light">
                 <Row className="onSale-title  m-3">
                     <Col xs="6" className="mt-2 d-flex">
                         <h4>On Sale</h4>

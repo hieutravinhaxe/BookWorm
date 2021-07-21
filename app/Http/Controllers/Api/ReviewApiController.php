@@ -70,10 +70,14 @@ class ReviewApiController extends Controller
         $review->book_id = $request->post('bookId');
         $review->review_title = $request->post('title');
         $review->rating_start = $request->post('rate');
-        $review->rating_details = $request->post('details');
+        $review->review_details = $request->post('details');
         $review->review_date = Carbon::now()->format('Y-m-d H:m:s');
-        $review->save();
-        return $review;
+        
+        if($review->save()){
+            return response([
+                'data' => $review
+            ]);
+        }
     }
 
     /**

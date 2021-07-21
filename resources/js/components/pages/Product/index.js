@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
+import "./product.css";
+import Pagi from "../../generals/Pagi";
 import {
     Container,
     Col,
@@ -39,7 +40,7 @@ export default function Product(props) {
     //data
     const [bookData, setBookData] = useState([]);
     const [reviewData, setReviewData] = useState([]);
-    const [authorData, setAuthorData] = useState(null);
+    const [authorData, setAuthorData] = useState([]);
     const [stateFrom, setStateFrom] = useState(0);
     const [stateTo, setStateTo] = useState(0);
     const [stateTotal, setStateTotal] = useState(0);
@@ -51,33 +52,57 @@ export default function Product(props) {
     const [star4, setStar4] = useState(0);
     const [star5, setStar5] = useState(0);
 
+    //show and sort
+    const [showBy, setShowBy] = useState(5);
+    const [orderBy, setOrderBy] = useState(1);
+    const [rateBy, setRateBy] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(null)
+
+    const [changePages, setChangePages] = useState(false)
 
     useEffect(() => {
         initBookData();
         initReviewData();
-    }, []);
+    }, [showBy, rateBy, orderBy,currentPage]);
 
     function initBookData() {
         axios
             .get("/api/books/" + bookId)
             .then(res => {
-                if (res.status === 200) {
-                    setBookData(res.data.book);
+                if (res.status == 200) {
                     setAuthorData(res.data.author);
+                    setBookData(res.data.book);
                 }
             })
             .catch(error => console.log(error));
     }
 
     function initReviewData() {
+        let url =
+            "/api/books/" +
+            bookId +
+            "/reviews?limit=" +
+            showBy +
+            "&page=" +
+            currentPage;
+        if (orderBy === 0) {
+            url = url + "&orderDate=0";
+        } else if (orderBy === 1) {
+            url = url + "&orderDate=1";
+        }
+        if (rateBy !== 0) {
+            url = url + "&rate=" + rateBy;
+        }
         axios
-            .get(`/api/books/${bookId}/reviews`)
+            .get(url)
             .then(res => {
                 if (res.status === 200) {
                     setReviewData(res.data.data);
                     setStateFrom(res.data.from);
                     setStateTo(res.data.to);
                     setStateTotal(res.data.total);
+                    setTotalPage(res.data.totalPages);
                     setStar1(res.data.star1);
                     setStar2(res.data.star2);
                     setStar3(res.data.star3);
@@ -85,7 +110,7 @@ export default function Product(props) {
                     setStar5(res.data.star5);
                 }
             })
-            .catch(error => console.log(eror));
+            .catch(error => console.log(error));
     }
 
     function downQuanlity() {
@@ -104,14 +129,66 @@ export default function Product(props) {
         }
     }
 
-    function setItemPerPage($i) {}
+    function getImage($image) {
+        if ($image === undefined) {
+            return "/images/book1.jpg";
+        } else {
+            return "/images/" + $image + ".jpg";
+        }
+    }
 
-    function setSort($s) {
-        
+    //show
+    function setItemPerPage(i) {
+        setShowBy(i);
+        setTotalPage(null);
+    }
+
+    //sort by
+    function setSort(s) {
+        setOrderBy(s)
+        setTotalPage(null)
+    }
+
+    //rate
+    function setRate(e, r) {
+        e.preventDefault();
+        setRateBy(r)
+        setTotalPage(null)
+    }
+
+    //submit review
+    function handleSubmitForm(e) {
+        e.preventDefault();
+        let data = {
+            bookId: bookId,
+            title: e.target.inputTitle.value,
+            details: e.target.inputDetails.value,
+            rate: e.target.selectStar.value
+        };
+
+        axios({
+            method: "post",
+            url: `/api/books/${bookId}/reviews`,
+            data: data
+        })
+            .then(res => {
+                if(res.status===200){
+                    if(orderBy==0){
+                        setReviewData([...reviewData,res.data.data]);
+                    }else{
+                        setReviewData([res.data.data,...reviewData]);
+                    }
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        setTotalPage(null)
     }
 
     return (
-        <div className="container-fluid mt-5">
+        <div className="container-fluid product">
             <h4 className="m-3">Category Name</h4>
             <hr className="w-100" />
             <Row className="m-3">
@@ -123,33 +200,22 @@ export default function Product(props) {
                                     <CardImg
                                         top
                                         width="100%"
-                                        src="/images/book1.jpg"
+                                        src={getImage(
+                                            bookData.book_cover_photo
+                                        )}
                                         alt="Card image cap"
                                     />
                                     <CardBody>
                                         <CardTitle tag="h5">
-                                            Card title
+                                            by: {authorData.author_name}
                                         </CardTitle>
                                     </CardBody>
                                 </Card>
                             </Col>
                             <Col md="7">
-                                <h5 id="bookTitle">Book's title</h5>
+                                <h5 id="bookTitle">{bookData.book_title}</h5>
                                 <div className="bookDesc">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur
-                                        adipiscing elit, sed do elusmod tempor
-                                        incldidunt ut labore et dolore magna
-                                        aliqua. Ut enim ad minim veniam, quis
-                                        nostrud exercitation ullamco laboris
-                                        nisi ut aliquip ex ea commodo consequat.
-                                        Excepteur sint occaecat.
-                                    </p>
-                                    <p>"the multi-milion copy bestseller"</p>
-                                    <p>Soon to be a major film</p>
-                                    <p>
-                                        A Number One New York Times Bestseller
-                                    </p>
+                                    <p>{bookData.book_summary}</p>
                                 </div>
                             </Col>
                         </Row>
@@ -160,9 +226,17 @@ export default function Product(props) {
                         <CardHeader>
                             <h5>
                                 <small>
-                                    <del>$234 </del>
+                                    {bookData.book_price !==
+                                        bookData.final_price && (
+                                        <del
+                                            className="mr-3 font-italic"
+                                            id="bookPrice"
+                                        >
+                                            ${bookData.book_price*stateQuanlity}
+                                        </del>
+                                    )}
                                 </small>
-                                $100
+                                ${bookData.final_price*stateQuanlity}
                             </h5>
                         </CardHeader>
                         <CardBody>
@@ -202,7 +276,6 @@ export default function Product(props) {
                                     color="primary"
                                     className="w-100"
                                 >
-                                    {" "}
                                     Add to carts
                                 </Button>
                             </Col>
@@ -212,35 +285,69 @@ export default function Product(props) {
             </Row>
             <Row className="m-3">
                 <Col md="8" className="p-4 border">
-                    <h5>Customer Reviews</h5>
-                    <h4 id="avgStar">{bookData.avg_rate}</h4>
+                    <Row className="header-customer-reviews">
+                        <Col md="3">
+                            <h5>Customer Reviews</h5>
+                        </Col>
+                        <Col>
+                            <span>
+                                {rateBy !== 0 && (
+                                    <p>(Filter by: {rateBy} stars)</p>
+                                )}
+                            </span>
+                        </Col>
+                    </Row>
+
+                    <h4 id="avgStar">{bookData.avg_rate} Stars</h4>
                     <div className="reviewByStar mb-2">
-                        <span className="mr-2">({stateTotal})</span>
+                        <span className="mr-2">
+                            <a href="" onClick={e => setRate(e, 0)}>
+                                ({bookData.num_reviews})
+                            </a>
+                        </span>
                         <span className="mr-2" id="5star">
-                            <a href="">5 star</a> ({star5})
+                            <a href="" onClick={e => setRate(e, 5)}>
+                                5 star
+                            </a>{" "}
+                            ({star5})
                         </span>
                         |
                         <span className="mr-2" id="4star">
-                            <a href="">4 star</a> ({star4})
+                            <a href="" onClick={e => setRate(e, 4)}>
+                                4 star
+                            </a>{" "}
+                            ({star4})
                         </span>
                         |
                         <span className="mr-2" id="3star">
-                            <a href="">3 star</a> ({star3})
+                            <a href="" onClick={e => setRate(e, 3)}>
+                                3 star
+                            </a>{" "}
+                            ({star3})
                         </span>
                         |
                         <span className="mr-2" id="2star">
-                            <a href="">2 star</a> ({star2})
+                            <a href="" onClick={e => setRate(e, 2)}>
+                                2 star
+                            </a>{" "}
+                            ({star2})
                         </span>
                         |
                         <span className="mr-2" id="1star">
-                            <a href="">1 star</a> ({star1})
+                            <a href="" onClick={e => setRate(e, 1)}>
+                                1 star
+                            </a>{" "}
+                            ({star1})
                         </span>
                         |
                     </div>
                     <Container>
                         <Row className="mb-4">
                             <Col md="4" className="d-flex">
-                                <p>Show {stateFrom}-{stateTo} of {stateTotal} reviews</p>
+                                <p>
+                                    Show {stateFrom}-{stateTo} of {stateTotal}{" "}
+                                    reviews
+                                </p>
                             </Col>
                             <Col md="8" className="d-flex flex-row-reverse">
                                 <ButtonDropdown
@@ -253,7 +360,7 @@ export default function Product(props) {
                                         color="primary"
                                         outline
                                     >
-                                        Show
+                                        Show {showBy}
                                     </DropdownToggle>
                                     <DropdownMenu className="w-100">
                                         <DropdownItem
@@ -288,16 +395,16 @@ export default function Product(props) {
                                         color="primary"
                                         outline
                                     >
-                                        Sort by
+                                        Sort by {orderBy == 0 ? "O-N" : "N-O"}
                                     </DropdownToggle>
                                     <DropdownMenu className="w-100">
                                         <DropdownItem
-                                            onClick={() => setSort(0)}
+                                            onClick={() => setSort(1)}
                                         >
                                             Sort by date: newlest to oldest
                                         </DropdownItem>
                                         <DropdownItem
-                                            onClick={() => setSort(1)}
+                                            onClick={() => setSort(0)}
                                         >
                                             Sort by date: oldest to newlest
                                         </DropdownItem>
@@ -306,58 +413,31 @@ export default function Product(props) {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md="12">
-                                <hr className="w-100" />
-                                <div className="reviewTitle">
-                                    <h5 id="reviewTitle">
-                                        Review Title
-                                        <small>
-                                            |
-                                            <span id="starOfReview">
-                                                5 stars
-                                            </span>
-                                        </small>
-                                    </h5>
-                                </div>
-                                <div className="reviewContent">
-                                    <p>
-                                        Such an incredivly complex story! I had
-                                        to buy it because there was a waiting
-                                        list of 30+ at the local library for
-                                        this book, Thrilled that I made the
-                                        purchase
-                                    </p>
-                                </div>
-                                <div className="reviewTime">
-                                    <p>april 12, 2021</p>
-                                </div>
-                            </Col>
-                            <Col md="12">
-                                <hr className="w-100" />
-                                <div className="reviewTitle">
-                                    <h5 id="reviewTitle">
-                                        Review Title
-                                        <small>
-                                            |
-                                            <span id="starOfReview">
-                                                5 stars
-                                            </span>
-                                        </small>
-                                    </h5>
-                                </div>
-                                <div className="reviewContent">
-                                    <p>
-                                        Such an incredivly complex story! I had
-                                        to buy it because there was a waiting
-                                        list of 30+ at the local library for
-                                        this book, Thrilled that I made the
-                                        purchase
-                                    </p>
-                                </div>
-                                <div className="reviewTime">
-                                    <p>april 12, 2021</p>
-                                </div>
-                            </Col>
+                            {reviewData.map(d => (
+                                <Col md="12" key={d.id}>
+                                    <hr className="w-100" />
+                                    <div className="reviewTitle">
+                                        <h5 id="reviewTitle">
+                                            {d.review_title}
+                                            <small>
+                                                |
+                                                <span id="starOfReview">
+                                                    {d.rating_start} stars
+                                                </span>
+                                            </small>
+                                        </h5>
+                                    </div>
+                                    <div className="reviewContent">
+                                        <p>{d.review_details}</p>
+                                    </div>
+                                    <div className="reviewTime">
+                                        <p>{d.review_date}</p>
+                                    </div>
+                                </Col>
+                            ))}
+                        </Row>
+                        <Row>
+                        {totalPage !== null ? <Pagi  pages={totalPage} setCurrentPage={setCurrentPage}/> : null}
                         </Row>
                     </Container>
                     <div className="confShowReview"></div>
@@ -368,10 +448,11 @@ export default function Product(props) {
                             <h5>Write a review</h5>
                         </CardHeader>
                         <CardBody>
-                            <Form>
+                            <Form onSubmit={e => handleSubmitForm(e)}>
                                 <FormGroup>
                                     <Label for="inputTitle">Add a title</Label>
                                     <Input
+                                        required
                                         type="text"
                                         name="inputTitle"
                                         id="inputTitle"
@@ -390,15 +471,31 @@ export default function Product(props) {
                                         placeholder="Enter detail"
                                     />
                                 </FormGroup>
+                                <FormGroup>
+                                    <Label for="selectStar">
+                                        Select a rating star
+                                    </Label>
+                                    <Input
+                                        type="select"
+                                        name="select"
+                                        id="selectStar"
+                                    >
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Input>
+                                </FormGroup>
+                                <Button
+                                    outline
+                                    color="primary"
+                                    type="submit"
+                                    className="w-100 md-3 mx-2"
+                                >
+                                    Submit Review
+                                </Button>
                             </Form>
-                            <Button
-                                outline
-                                color="primary"
-                                type="submit"
-                                className="w-100 md-3 mx-2"
-                            >
-                                Submit Review
-                            </Button>
                         </CardBody>
                     </Card>
                 </Col>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import './shop.css';
 import axios from "axios";
+import Pagi from "../../generals/Pagi";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,10 +10,7 @@ import {
     ButtonDropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem,
-    Pagination,
-    PaginationItem,
-    PaginationLink
+    DropdownItem
 } from "reactstrap";
 
 import {
@@ -52,19 +51,19 @@ export default function Shop() {
     const [stateFrom, setStateFrom] = useState(0);
     const [stateTo, setStateTo] = useState(0);
     const [stateTotal, setStateTotal] = useState(0);
-    const [statePages, setStatePages] = useState(0);
-    const [stateCurrentPage, setStateCurrentPage] = useState(1);
-    const [listPages, setListPages] = useState([]);
+    const [statePages, setPages] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         initAuthorList();
         initCategotyList();
         initBookList();
-    }, [rateBy, categoryBy, authorBy, showBy, sortBy, stateCurrentPage]);
+    }, [rateBy, categoryBy, authorBy, showBy, sortBy, currentPage]);
+
 
     function initBookList() {
         let url = "/api/books";
-        url = url + "?limit=" + showBy + "&page=" + stateCurrentPage;
+        url = url + "?limit=" + showBy + "&page=" + currentPage;
         if (rateBy != 0 && rateBy != null) {
             url = url + "&rate=" + rateBy;
         }
@@ -90,17 +89,8 @@ export default function Shop() {
                     setStateFrom(res.data.from);
                     setStateTo(res.data.to);
                     setStateTotal(res.data.total);
-                    setStatePages(res.data.totalPages);
+                    setPages(res.data.totalPages);
                     setBookList(res.data.data);
-                    if (res.data.totalPages > 20) {
-                        setListPages([...Array(20).keys()].map(i => 1 + i));
-                    } else {
-                        setListPages(
-                            [...Array(res.data.totalPages).keys()].map(
-                                i => 1 + i
-                            )
-                        );
-                    }
                 }
             })
             .catch(error => console.log(error));
@@ -128,44 +118,56 @@ export default function Shop() {
             .catch(error => console.log(error));
     }
 
-    function setFilterRate($rate) {
-        setRateBy($rate);
-        if ($rate !== null) {
-            setBreadStar("Filter by : " + $rate + " stars");
+    function setFilterRate(rate) {
+        setRateBy(rate);
+        if (rate !== null) {
+            setBreadStar("Filter by : " + rate + " stars");
         } else {
             setBreadStar(null);
         }
+        setPages(null)
     }
 
-    function setFilterAuthor($author, $authorName) {
-        setAuthorBy($author);
-        if ($authorName !== null) {
-            setBreadAuthor("Filter author by : " + $authorName);
+    function setFilterAuthor(author, authorName) {
+        setAuthorBy(author);
+        if (authorName !== null) {
+            setBreadAuthor("Filter author by : " + authorName);
         } else {
             setBreadAuthor(null);
         }
+        setPages(null)
     }
 
-    function setFilterCate($cate, $cateName) {
-        setCategoryBy($cate);
-        if ($cateName !== null) {
-            setBreadCate("Filter category by: " + $cateName);
+    function setFilterCate(cate, cateName) {
+        setCategoryBy(cate);
+        if (cateName !== null) {
+            setBreadCate("Filter category by: " + cateName);
         } else {
             setBreadCate(null);
         }
+        setPages(null)
     }
 
-    function setItemPerPage($num) {
-        setShowBy($num);
-        setStateCurrentPage(1);
+    function setItemPerPage(num) {
+        setShowBy(num);
+        setCurrentPage(1);
+        setPages(null)
     }
 
-    function setSort($s) {
-        setSortBy($s);
+    function setSort(s) {
+        setSortBy(s);
+        setPages(null)
     }
 
-    function changePage($p) {
-        setStateCurrentPage($p);
+
+    function getStringSortBy(){
+        switch(sortBy){
+            case 0: return " A_Z";
+            case 1: return " onsale";
+            case 2: return " popularity"
+            case 3: return " price: low-high";
+            case 4: return " price: high-low";
+        }
     }
 
     return (
@@ -239,7 +241,7 @@ export default function Shop() {
                             >
                                 Categories
                             </Accordion.Toggle>
-                            <Accordion.Collapse eventKey="1" className="mb-2">
+                            <Accordion.Collapse eventKey="1" className=" mb-2">
                                 <ButtonGroup vertical className="w-100">
                                     <Button
                                         onClick={() =>
@@ -267,7 +269,7 @@ export default function Shop() {
                                 as={Button}
                                 variant="outline-primary"
                                 eventKey="2"
-                                className="w-100 mb-3"
+                                className="w-100 mb-3 "
                             >
                                 Rating
                             </Accordion.Toggle>
@@ -315,7 +317,7 @@ export default function Shop() {
                                             color="primary"
                                             outline
                                         >
-                                            Show
+                                            Show {showBy}
                                         </DropdownToggle>
                                         <DropdownMenu className="w-100">
                                             <DropdownItem
@@ -358,13 +360,13 @@ export default function Shop() {
                                             color="primary"
                                             outline
                                         >
-                                            Sort by
+                                            Sort by {getStringSortBy()}
                                         </DropdownToggle>
                                         <DropdownMenu className="w-100">
                                             <DropdownItem
                                                 onClick={() => setSort(0)}
                                             >
-                                                Nomal
+                                                A-Z
                                             </DropdownItem>
                                             <DropdownItem
                                                 onClick={() => setSort(1)}
@@ -411,47 +413,8 @@ export default function Shop() {
                                 ))}
                             </Row>
                             <Row className="justify-content-center">
-                                <Pagination aria-label="Page navigation example">
-                                    <PaginationItem>
-                                        <PaginationLink
-                                            onClick={() =>
-                                                changePage(
-                                                    stateCurrentPage == 1
-                                                        ? 1
-                                                        : stateCurrentPage - 1
-                                                )
-                                            }
-                                            first
-                                            href=""
-                                        />
-                                    </PaginationItem>
-                                    {listPages.map((l, index) => (
-                                        <PaginationItem key={index}>
-                                            <PaginationLink
-                                                onClick={() =>
-                                                    changePage(index + 1)
-                                                }
-                                                href=""
-                                            >
-                                                {index + 1}
-                                            </PaginationLink>
-                                        </PaginationItem>
-                                    ))}
-                                    <PaginationItem>
-                                        <PaginationLink
-                                            onClick={() =>
-                                                changePage(
-                                                    stateCurrentPage ==
-                                                        statePages
-                                                        ? stateCurrentPage
-                                                        : stateCurrentPage + 1
-                                                )
-                                            }
-                                            last
-                                            href=""
-                                        />
-                                    </PaginationItem>
-                                </Pagination>
+                                {statePages !== null ? <Pagi  pages={statePages} setCurrentPage={setCurrentPage}/> : null}
+                                
                             </Row>
                         </div>
                     </Col>
