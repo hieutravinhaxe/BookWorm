@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {useHistory} from "react-router-dom"
 import axios from "axios";
 import BookCard from "../../generals/BookCard";
 import Carousel from "react-elastic-carousel";
@@ -13,7 +14,10 @@ const breakPoints = [
     { width: 800, itemsToShow: 4 }
 ];
 
-export default function Home() {
+export default function Home({carts, setCarts}) {
+
+    let history = useHistory()
+
     const [onSaleList, setOnSaleList] = useState([]);
 
     useEffect(() => {
@@ -31,6 +35,10 @@ export default function Home() {
             })
             .catch(error => console.log(error));
     }
+
+    function changeToShop(){
+        history.push("/shop/sale")
+    }
     return (
         <>
             <Container className="onSale bg-light">
@@ -39,7 +47,7 @@ export default function Home() {
                         <h4>On Sale</h4>
                     </Col>
                     <Col xs="6" className="mt-2 d-flex flex-row-reverse">
-                        <Button outline color="primary" className="text-right">
+                        <Button outline color="primary" className="text-right" onClick={()=>changeToShop()}>
                             View all
                         </Button>
                     </Col>

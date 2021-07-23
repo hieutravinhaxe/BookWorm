@@ -1,3 +1,10 @@
 .shopzen {
     margin-top: 4rem;
 }
+.author-name{
+    text-transform: capitalize;
+}
+
+.cate-name{
+    text-transform: capitalize;
+}

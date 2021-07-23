@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import './shop.css';
+import "./shop.css";
 import axios from "axios";
 import Pagi from "../../generals/Pagi";
 import {
@@ -13,15 +13,11 @@ import {
     DropdownItem
 } from "reactstrap";
 
-import {
-    Accordion,
-    Button,
-    ButtonGroup
-} from "react-bootstrap";
+import { Accordion, Button, ButtonGroup } from "react-bootstrap";
 import BookCard from "../../generals/BookCard";
 
-export default function Shop() {
-   
+export default function Shop({onSale}) {
+
     const [dropdownOpenOrder, setOpenOrder] = useState(false);
     const toggleOrder = () => setOpenOrder(!dropdownOpenOrder);
 
@@ -37,7 +33,7 @@ export default function Shop() {
     const [categoryBy, setCategoryBy] = useState(0);
     const [rateBy, setRateBy] = useState(0);
     const [showBy, setShowBy] = useState(15);
-    const [sortBy, setSortBy] = useState(0);
+    const [sortBy, setSortBy] = useState(onSale);
 
     // books list
     const [bookList, setBookList] = useState([]);
@@ -60,6 +56,9 @@ export default function Shop() {
         initBookList();
     }, [rateBy, categoryBy, authorBy, showBy, sortBy, currentPage]);
 
+    function setOnSale(){
+        setSort(1)
+    }
 
     function initBookList() {
         let url = "/api/books";
@@ -76,7 +75,7 @@ export default function Shop() {
         if (sortBy == 1) {
             url = url + "&orderSPrice=1";
         } else if (sortBy == 2) {
-            url = url + "&orderReview=1&orderFPrice=0";
+            url = url + "&orderReviews=1&orderFPrice=0";
         } else if (sortBy == 3) {
             url = url + "&orderFPrice=0";
         } else if (sortBy == 4) {
@@ -125,7 +124,7 @@ export default function Shop() {
         } else {
             setBreadStar(null);
         }
-        setPages(null)
+        setPages(null);
     }
 
     function setFilterAuthor(author, authorName) {
@@ -135,7 +134,7 @@ export default function Shop() {
         } else {
             setBreadAuthor(null);
         }
-        setPages(null)
+        setPages(null);
     }
 
     function setFilterCate(cate, cateName) {
@@ -145,28 +144,32 @@ export default function Shop() {
         } else {
             setBreadCate(null);
         }
-        setPages(null)
+        setPages(null);
     }
 
     function setItemPerPage(num) {
         setShowBy(num);
         setCurrentPage(1);
-        setPages(null)
+        setPages(null);
     }
 
     function setSort(s) {
         setSortBy(s);
-        setPages(null)
+        setPages(null);
     }
 
-
-    function getStringSortBy(){
-        switch(sortBy){
-            case 0: return " A_Z";
-            case 1: return " onsale";
-            case 2: return " popularity"
-            case 3: return " price: low-high";
-            case 4: return " price: high-low";
+    function getStringSortBy() {
+        switch (sortBy) {
+            case 0:
+                return " A_Z";
+            case 1:
+                return " onsale";
+            case 2:
+                return " popularity";
+            case 3:
+                return " price: low-high";
+            case 4:
+                return " price: high-low";
         }
     }
 
@@ -219,7 +222,8 @@ export default function Shop() {
                                         All
                                     </Button>
                                     {authorList.map(d => (
-                                        <Button
+                                        <Button className="author-name"
+                                            className={authorBy==d.id?"active":null}
                                             onClick={() =>
                                                 setFilterAuthor(
                                                     d.id,
@@ -244,6 +248,7 @@ export default function Shop() {
                             <Accordion.Collapse eventKey="1" className=" mb-2">
                                 <ButtonGroup vertical className="w-100">
                                     <Button
+                                        
                                         onClick={() =>
                                             setFilterCate(null, null)
                                         }
@@ -252,6 +257,7 @@ export default function Shop() {
                                     </Button>
                                     {categoryList.map(c => (
                                         <Button
+                                            className={categoryBy==c.id?"active cate-name":"cate-name"}
                                             onClick={() =>
                                                 setFilterCate(
                                                     c.id,
@@ -301,10 +307,13 @@ export default function Shop() {
                         <div className="container-fluid">
                             <Row className="mb-4">
                                 <Col md="6" className="d-flex">
-                                    <p>
-                                        Show {stateTotal > 0 ? stateFrom : 0}-
-                                        {stateTo} of {stateTotal} books
-                                    </p>
+                                    {stateTotal != 0 ? (
+                                        <p>
+                                            Show{" "}
+                                            {stateTotal > 0 ? stateFrom : 0}-
+                                            {stateTo} of {stateTotal} books
+                                        </p>
+                                    ) : null}
                                 </Col>
                                 <Col className="d-flex flex-row-reverse">
                                     <ButtonDropdown
@@ -413,8 +422,12 @@ export default function Shop() {
                                 ))}
                             </Row>
                             <Row className="justify-content-center">
-                                {statePages !== null ? <Pagi  pages={statePages} setCurrentPage={setCurrentPage}/> : null}
-                                
+                                {statePages !== null && statePages !== 0 ? (
+                                    <Pagi
+                                        pages={statePages}
+                                        setCurrentPage={setCurrentPage}
+                                    />
+                                ) : null}
                             </Row>
                         </div>
                     </Col>

@@ -36,8 +36,8 @@ class Book extends Model
 
     public function scopeAvgStar($query)
     {
-        return $query->addSelect(DB::raw('coalesce(sum(cast(reviews.rating_start as integer))/count(*),0) as avg_rate'))
-                    ->addSelect(DB::raw('coalesce(count(*),0) as num_reviews'))
+        return $query->addSelect(DB::raw('coalesce(sum(cast(reviews.rating_start as double precision))/count(*),0) as avg_rate'))
+                    ->addSelect(DB::raw('coalesce(count(reviews.id),0) as num_reviews'))
                     ->leftJoin('reviews', 'reviews.book_id', 'books.id');
     }
 
@@ -67,7 +67,7 @@ class Book extends Model
     }
 
     public function scopeFilterRate($query, $star){
-        ($star===0)?$query:$query->having(DB::raw('coalesce(sum(cast(reviews.rating_start as integer))/count(*),0)'),'=',$star);
+        ($star===0)?$query:$query->having(DB::raw('coalesce(sum(cast(reviews.rating_start as integer))/count(*),0)'),'>=',$star);
     }
 
     public function scopeOrderByFinalPrice($query, $order){
@@ -118,5 +118,9 @@ class Book extends Model
         else{
             return $query->orderByRaw('avg_rate DESC');
         }
+    }
+
+    public function scopeExist($query, $id){
+        
     }
 }

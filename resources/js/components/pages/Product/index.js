@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./product.css";
 import Pagi from "../../generals/Pagi";
+import swal from "sweetalert";
+import {toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
 import {
     Container,
     Col,
@@ -23,7 +26,17 @@ import {
 } from "reactstrap";
 import axios from "axios";
 
-export default function Product(props) {
+toast.configure()
+export default function Product({ carts, setCarts }) {
+
+    function notiReviews(){
+        toast.success('Send reviews success!!!',{position:toast.POSITION.BOTTOM_RIGHT})
+    }
+
+    function notiAddToCart(){
+        toast.success('Complete push items to cart!!!',{position:toast.POSITION.TOP_RIGHT})
+    }
+
     //quality of books
     const [stateQuanlity, setStateQuanlity] = useState(1);
 
@@ -41,6 +54,7 @@ export default function Product(props) {
     const [bookData, setBookData] = useState([]);
     const [reviewData, setReviewData] = useState([]);
     const [authorData, setAuthorData] = useState([]);
+    const [cateData, setCateData] = useState([]);
     const [stateFrom, setStateFrom] = useState(0);
     const [stateTo, setStateTo] = useState(0);
     const [stateTotal, setStateTotal] = useState(0);
@@ -57,14 +71,17 @@ export default function Product(props) {
     const [orderBy, setOrderBy] = useState(1);
     const [rateBy, setRateBy] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPage, setTotalPage] = useState(null)
+    const [totalPage, setTotalPage] = useState(null);
 
-    const [changePages, setChangePages] = useState(false)
+    
+    const [inCart, setInCart] = useState(false);
 
     useEffect(() => {
         initBookData();
         initReviewData();
-    }, [showBy, rateBy, orderBy,currentPage]);
+        checkInCart();
+    }, [showBy, rateBy, orderBy, currentPage, inCart]);
+
 
     function initBookData() {
         axios
@@ -73,6 +90,7 @@ export default function Product(props) {
                 if (res.status == 200) {
                     setAuthorData(res.data.author);
                     setBookData(res.data.book);
+                    setCateData(res.data.category);
                 }
             })
             .catch(error => console.log(error));
@@ -115,17 +133,33 @@ export default function Product(props) {
 
     function downQuanlity() {
         if (stateQuanlity == 1) {
-            alert("Quanlity must from 1 to 8");
+            swal({
+                title: "WARNING!",
+                text: "Amount from 1 - 8",
+                icon: "warning",
+                button: "OK"
+            });
         } else {
             setStateQuanlity(stateQuanlity - 1);
         }
     }
 
     function upQuanlity() {
-        if (stateQuanlity == 8) {
-            alert("Quanlity must from 1 to 8");
-        } else {
-            setStateQuanlity(stateQuanlity + 1);
+        if(inCart){
+            carts.forEach(d =>{
+                if(d.bookId===bookId){
+                    if(d.quanlity+stateQuanlity>8){
+                        swal({
+                            title: "WARNING!",
+                            text: "Amount from 1 - 8",
+                            icon: "warning",
+                            button: "OK"
+                        });
+                    }else{
+                        setStateQuanlity(stateQuanlity + 1)
+                    }
+                }
+            })
         }
     }
 
@@ -145,20 +179,21 @@ export default function Product(props) {
 
     //sort by
     function setSort(s) {
-        setOrderBy(s)
-        setTotalPage(null)
+        setOrderBy(s);
+        setTotalPage(null);
     }
 
     //rate
     function setRate(e, r) {
         e.preventDefault();
-        setRateBy(r)
-        setTotalPage(null)
+        setRateBy(r);
+        setTotalPage(null);
     }
 
     //submit review
     function handleSubmitForm(e) {
         e.preventDefault();
+
         let data = {
             bookId: bookId,
             title: e.target.inputTitle.value,
@@ -172,24 +207,80 @@ export default function Product(props) {
             data: data
         })
             .then(res => {
-                if(res.status===200){
-                    if(orderBy==0){
-                        setReviewData([...reviewData,res.data.data]);
-                    }else{
-                        setReviewData([res.data.data,...reviewData]);
+                if (res.status === 200) {
+                    if (orderBy == 0) {
+                        setReviewData([...reviewData, res.data.data]);
+                    } else {
+                        setReviewData([res.data.data, ...reviewData]);
                     }
+                    e.target.inputTitle.value = "";
+                    e.target.inputDetails.value = "";
+                    e.target.selectStar.value = 1;
+                    initReviewData();
+                    initBookData();
+                    notiReviews();
                 }
             })
             .catch(error => {
                 console.log(error);
             });
 
-        setTotalPage(null)
+        setTotalPage(null);
+    }
+
+    function checkInCart() {
+        carts.forEach(d => {
+            if (d.bookId === bookId) {
+                setInCart(true);
+            }
+        });
+    }
+
+    function hanleAddToCart() {
+        if (inCart) {
+            carts.forEach(d => {
+                if (d.bookId === bookId) {
+                    if (d.quanlity + stateQuanlity > 8) {
+                        swal({
+                            title: "WARNING!",
+                            text:
+                                "Are you sure amount in here and in carts less 8",
+                            icon: "warning",
+                            button: "OK"
+                        });
+                    } else {
+                        d.quanlity += stateQuanlity;
+                    }
+                }
+            });
+            localStorage.setItem("carts", JSON.stringify(carts));
+            setCarts(carts);
+            //console.log("in cart")
+        } else {
+            let data = {
+                bookId: bookId,
+                quanlity: stateQuanlity,
+                bookTitle: bookData.book_title,
+                bookPrice: bookData.book_price,
+                author: authorData.author_name,
+                bookFPrice: bookData.final_price,
+                bookImage: bookData.book_cover_photo
+            };
+            setInCart(true);
+            let addCart = [...carts, data];
+            localStorage.setItem("carts", JSON.stringify(addCart));
+            setCarts([...carts, data]);
+        }
+        notiAddToCart()
+    }
+
+    function getAvgStar(avg) {
+        return parseFloat(avg).toFixed(2);
     }
 
     return (
         <div className="container-fluid product">
-            <h4 className="m-3">Category Name</h4>
+            <h4 className="m-3 cate-name">{cateData.category_name}</h4>
             <hr className="w-100" />
             <Row className="m-3">
                 <Col md="8">
@@ -232,11 +323,13 @@ export default function Product(props) {
                                             className="mr-3 font-italic"
                                             id="bookPrice"
                                         >
-                                            ${bookData.book_price*stateQuanlity}
+                                            $
+                                            {bookData.book_price *
+                                                stateQuanlity}
                                         </del>
                                     )}
                                 </small>
-                                ${bookData.final_price*stateQuanlity}
+                                ${bookData.final_price * stateQuanlity}
                             </h5>
                         </CardHeader>
                         <CardBody>
@@ -275,6 +368,7 @@ export default function Product(props) {
                                     outline
                                     color="primary"
                                     className="w-100"
+                                    onClick={() => hanleAddToCart()}
                                 >
                                     Add to carts
                                 </Button>
@@ -298,7 +392,7 @@ export default function Product(props) {
                         </Col>
                     </Row>
 
-                    <h4 id="avgStar">{bookData.avg_rate} Stars</h4>
+                    <h4 id="avgStar">{getAvgStar(bookData.avg_rate)} Stars</h4>
                     <div className="reviewByStar mb-2">
                         <span className="mr-2">
                             <a href="" onClick={e => setRate(e, 0)}>
@@ -344,10 +438,12 @@ export default function Product(props) {
                     <Container>
                         <Row className="mb-4">
                             <Col md="4" className="d-flex">
-                                <p>
-                                    Show {stateFrom}-{stateTo} of {stateTotal}{" "}
-                                    reviews
-                                </p>
+                                {totalPage !== 0 ? (
+                                    <p>
+                                        Show {stateFrom}-{stateTo} of{" "}
+                                        {stateTotal} reviews
+                                    </p>
+                                ) : null}
                             </Col>
                             <Col md="8" className="d-flex flex-row-reverse">
                                 <ButtonDropdown
@@ -437,7 +533,12 @@ export default function Product(props) {
                             ))}
                         </Row>
                         <Row>
-                        {totalPage !== null ? <Pagi  pages={totalPage} setCurrentPage={setCurrentPage}/> : null}
+                            {totalPage !== null && totalPage !== 0 ? (
+                                <Pagi
+                                    pages={totalPage}
+                                    setCurrentPage={setCurrentPage}
+                                />
+                            ) : null}
                         </Row>
                     </Container>
                     <div className="confShowReview"></div>
@@ -450,7 +551,9 @@ export default function Product(props) {
                         <CardBody>
                             <Form onSubmit={e => handleSubmitForm(e)}>
                                 <FormGroup>
-                                    <Label for="inputTitle">Add a title</Label>
+                                    <Label for="inputTitle">
+                                        Add a title *
+                                    </Label>
                                     <Input
                                         required
                                         type="text"

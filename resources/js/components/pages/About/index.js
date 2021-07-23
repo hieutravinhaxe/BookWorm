@@ -3,7 +3,8 @@ import Navigation from "../../generals/Nav";
 import { BrowserRouter } from "react-router-dom";
 import {Container, Row, Col} from "reactstrap";
 
-export default function About() {
+export default function About({carts, setCarts}) {
+
     return (
         <div className="about p-5 mt-4">
             <h4>About Us</h4>

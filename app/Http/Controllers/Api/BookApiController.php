@@ -18,6 +18,12 @@ class BookApiController extends Controller
      */
     public function index(Request $req)
     {
+        if($req->has('exist')){
+            $r = Book::where('id',$req->get('exist'))->get()->count();
+            return response([
+                'checkExist' => $r
+            ]);
+        }
         $page = $req->has('page') ? $req->get('page') : 1;
         $limit = $req->has('limit') ? $req->get('limit') : 15;
         $orderByNumReviews = $req->has('orderReviews')? $req->get('orderReviews'):null;

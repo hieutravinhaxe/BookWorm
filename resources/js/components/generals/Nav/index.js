@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../../../assets/bookworm_icon.svg";
 import "./nav.css";
 import { useLocation } from "react-router-dom";
@@ -12,10 +12,16 @@ import {
     NavLink
 } from "reactstrap";
 
-function Navigation() {
+
+
+function Navigation({carts, setCarts}) {
+    
+    const cartsFromLocal = JSON.parse(localStorage.getItem('carts')) || []
+    
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = () => setIsOpen(!isOpen);
+
 
     let location = useLocation();
 
@@ -49,8 +55,8 @@ function Navigation() {
                             </NavLink>
                         </NavItem>
                         <NavItem className="mr-1">
-                            <NavLink className={cartClass} href="/">
-                                Cart<span className="cartItems">(1)</span>
+                            <NavLink className={cartClass} href="/cart">
+                                Cart<span id="cartItems">({cartsFromLocal.length})</span>
                             </NavLink>
                         </NavItem>
                     </Nav>

@@ -29,7 +29,7 @@ export default function FeaturedBooks() {
     function initPopular() {
         axios
             .get(
-                "http://127.0.0.1:8000/api/books?limit=8&page=1&orderReview=1&orderFPrice=0"
+                "http://127.0.0.1:8000/api/books?limit=8&page=1&orderReviews=1&orderFPrice=0"
             )
             .then(res => {
                 if (res.status === 200) {

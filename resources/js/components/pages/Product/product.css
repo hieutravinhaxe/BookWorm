@@ -1,3 +1,7 @@
 .product{
     margin-top: 7rem;
 }
+
+.cate-name{
+    text-transform: capitalize
+}
