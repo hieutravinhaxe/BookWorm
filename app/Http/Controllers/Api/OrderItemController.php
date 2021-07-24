@@ -26,6 +26,12 @@ class OrderItemController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'orderId'=>'required|exists:orders,id',
+            'bookId'=>'required|exists:books,id',
+            'quanlity'=>'required|max:1|in:1,2,3,4,5,6,7,8',
+            'price'=>'required'
+        ]);
 
         $itemOrder = new OrderItem();
         $itemOrder->order_id=$request->post('orderId');

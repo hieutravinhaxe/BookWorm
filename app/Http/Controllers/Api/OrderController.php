@@ -27,7 +27,10 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $request->validate([
+            'amount'=>'required|max:1|in:1,2,3,4,5,6,7,8'
+        ]);
+
         $order = new Order();
         $order->order_amount=$request->post('amount');
         $order->order_date = Carbon::now()->format('Y-m-d H:m:s');

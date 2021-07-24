@@ -2,12 +2,11 @@ import React ,{useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 import Footer from "./generals/Footer";
 import Navigation from "./generals/Nav";
-import Home from "./pages/Home/home.js";
+import Home from "./pages/Home";
 import About from "./pages/About";
 import Shop from "./pages/Shop";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
-import ThankYou from "./pages/Cart/ThankYou.js"
 import { BrowserRouter,Switch, Route} from "react-router-dom";
 
 const cartsFromLocal = JSON.parse(localStorage.getItem('carts')) || []
@@ -39,9 +38,7 @@ function App() {
                 <Route exact path="/cart">
                     <Cart carts={carts} setCarts={setCarts}/>
                 </Route>
-                <Route exact path="/thank">
-                    <ThankYou/>
-                </Route>
+                <Route path="**" render={() => <h1 className="not-found-route" style={{height:"35rem"}}>Route not found!</h1>}></Route>
                 </Switch>
                 <Footer />
             </div>

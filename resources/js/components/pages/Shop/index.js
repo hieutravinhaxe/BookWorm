@@ -215,6 +215,7 @@ export default function Shop({onSale}) {
                             <Accordion.Collapse eventKey="0" className="mb-2">
                                 <ButtonGroup vertical className="w-100">
                                     <Button
+                                    className={authorBy==0?"active cate-name":"cate-name"}
                                         onClick={() =>
                                             setFilterAuthor(null, null)
                                         }
@@ -248,7 +249,7 @@ export default function Shop({onSale}) {
                             <Accordion.Collapse eventKey="1" className=" mb-2">
                                 <ButtonGroup vertical className="w-100">
                                     <Button
-                                        
+                                        className={categoryBy==0?"active cate-name":"cate-name"}
                                         onClick={() =>
                                             setFilterCate(null, null)
                                         }
@@ -281,22 +282,35 @@ export default function Shop({onSale}) {
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="2" className="mb-2">
                                 <ButtonGroup vertical className="w-100">
-                                    <Button onClick={() => setFilterRate(null)}>
+                                    <Button 
+                                    className={rateBy==0?"active cate-name":"cate-name"}
+                                    onClick={() => setFilterRate(null)}>
                                         All rating
                                     </Button>
-                                    <Button onClick={() => setFilterRate(1)}>
+                                    <Button
+                                    className={rateBy==1?"active cate-name":"cate-name"}
+                                    onClick={() => setFilterRate(1)}>
                                         1 star
                                     </Button>
-                                    <Button onClick={() => setFilterRate(2)}>
+                                    <Button 
+                                    className={rateBy==2?"active cate-name":"cate-name"}
+                                    
+                                    onClick={() => setFilterRate(2)}>
                                         2 stars
                                     </Button>
-                                    <Button onClick={() => setFilterRate(3)}>
+                                    <Button
+                                    className={rateBy==3?"active cate-name":"cate-name"}
+                                    onClick={() => setFilterRate(3)}>
                                         3 stars
                                     </Button>
-                                    <Button onClick={() => setFilterRate(4)}>
+                                    <Button 
+                                    className={rateBy==4?"active cate-name":"cate-name"}
+                                    onClick={() => setFilterRate(4)}>
                                         4 stars
                                     </Button>
-                                    <Button onClick={() => setFilterRate(5)}>
+                                    <Button 
+                                    className={rateBy==5?"active cate-name":"cate-name"}
+                                    onClick={() => setFilterRate(5)}>
                                         5 stars
                                     </Button>
                                 </ButtonGroup>
@@ -306,7 +320,7 @@ export default function Shop({onSale}) {
                     <Col md="9">
                         <div className="container-fluid">
                             <Row className="mb-4">
-                                <Col md="6" className="d-flex">
+                                <Col md="7" className="d-flex">
                                     {stateTotal != 0 ? (
                                         <p>
                                             Show{" "}
@@ -319,7 +333,7 @@ export default function Shop({onSale}) {
                                     <ButtonDropdown
                                         isOpen={dropdownOpenShow}
                                         toggle={toggleShow}
-                                        className="w-100 mr-4"
+                                        className="w-50 mr-4"
                                     >
                                         <DropdownToggle
                                             caret
@@ -328,7 +342,7 @@ export default function Shop({onSale}) {
                                         >
                                             Show {showBy}
                                         </DropdownToggle>
-                                        <DropdownMenu className="w-100">
+                                        <DropdownMenu className="w-50 mr-4">
                                             <DropdownItem
                                                 onClick={() =>
                                                     setItemPerPage(5)

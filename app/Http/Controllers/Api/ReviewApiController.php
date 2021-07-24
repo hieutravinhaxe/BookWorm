@@ -66,6 +66,13 @@ class ReviewApiController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'bookId'=>'required|exists:books,id',
+            'title'=>'required|max:120',
+            'rate' =>'required|max:1|in:1,2,3,4,5',
+            'details'=>'nullable'
+        ]);
+
         $review = new Review();
         $review->book_id = $request->post('bookId');
         $review->review_title = $request->post('title');

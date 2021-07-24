@@ -12,7 +12,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: black;
+    color: rgb(34, 142, 214);
     /* padding: 8px 14px; */
     height: 40px;
     width: 40px;
@@ -20,11 +20,12 @@
     transition: background-color .2s;
     border: 1px solid #ddd;
     cursor: pointer;
+    border-radius: 7px;
     
   }
   
   .pagination-container a.active {
-    background-color: #007bff;
+    background-color: #1663c2;
     color: white;
     border: 1px solid #7cbddb;
   }
@@ -33,3 +34,4 @@
     opacity: 0.2;
   }
   .pagination-container a:hover:not(.active) {background-color: rgb(238, 238, 238);}
+

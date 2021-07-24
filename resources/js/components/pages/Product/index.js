@@ -30,11 +30,11 @@ toast.configure()
 export default function Product({ carts, setCarts }) {
 
     function notiReviews(){
-        toast.success('Send reviews success!!!',{position:toast.POSITION.BOTTOM_RIGHT})
+        toast.info('Send reviews success!!!',{position:toast.POSITION.BOTTOM_RIGHT})
     }
 
     function notiAddToCart(){
-        toast.success('Complete push items to cart!!!',{position:toast.POSITION.TOP_RIGHT})
+        toast.info('Complete push items to cart!!!',{position:toast.POSITION.TOP_RIGHT})
     }
 
     //quality of books
@@ -148,7 +148,7 @@ export default function Product({ carts, setCarts }) {
         if(inCart){
             carts.forEach(d =>{
                 if(d.bookId===bookId){
-                    if(d.quanlity+stateQuanlity>8){
+                    if(d.quanlity+stateQuanlity>=8){
                         swal({
                             title: "WARNING!",
                             text: "Amount from 1 - 8",
@@ -250,12 +250,12 @@ export default function Product({ carts, setCarts }) {
                         });
                     } else {
                         d.quanlity += stateQuanlity;
+                        notiAddToCart()
                     }
                 }
             });
             localStorage.setItem("carts", JSON.stringify(carts));
-            setCarts(carts);
-            //console.log("in cart")
+            setCarts(carts); 
         } else {
             let data = {
                 bookId: bookId,
@@ -270,8 +270,8 @@ export default function Product({ carts, setCarts }) {
             let addCart = [...carts, data];
             localStorage.setItem("carts", JSON.stringify(addCart));
             setCarts([...carts, data]);
+            notiAddToCart()
         }
-        notiAddToCart()
     }
 
     function getAvgStar(avg) {
@@ -329,7 +329,7 @@ export default function Product({ carts, setCarts }) {
                                         </del>
                                     )}
                                 </small>
-                                ${bookData.final_price * stateQuanlity}
+                                ${getAvgStar(bookData.final_price * stateQuanlity)}
                             </h5>
                         </CardHeader>
                         <CardBody>

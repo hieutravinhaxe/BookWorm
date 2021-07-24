@@ -5,7 +5,6 @@ import {
     TabPane,
     Nav,
     NavItem,
-    NavLink,
     Row,
     Col,
     Container
@@ -29,7 +28,7 @@ export default function FeaturedBooks() {
     function initPopular() {
         axios
             .get(
-                "http://127.0.0.1:8000/api/books?limit=8&page=1&orderReviews=1&orderFPrice=0"
+                "/api/books?limit=8&page=1&orderReviews=1&orderFPrice=0"
             )
             .then(res => {
                 if (res.status === 200) {
@@ -42,7 +41,7 @@ export default function FeaturedBooks() {
     function initRecomData() {
         axios
             .get(
-                "http://127.0.0.1:8000/api/books?limit=8&page=1&orderRate=1&orderFPrice=0"
+                "/api/books?limit=8&page=1&orderRate=1&orderFPrice=0"
             )
             .then(res => {
                 if (res.status === 200) {
@@ -62,6 +61,7 @@ export default function FeaturedBooks() {
             <Nav tabs className="justify-content-center">
                 <NavItem className="mb-3 mr-1">
                     <Button
+                        variant="outline-primary"
                         className={classnames({ active: activeTab === "1" })}
                         onClick={() => {
                             toggle("1");
@@ -72,6 +72,7 @@ export default function FeaturedBooks() {
                 </NavItem>
                 <NavItem>
                     <Button
+                        variant="outline-primary"
                         className={classnames({ active: activeTab === "2" })}
                         onClick={() => {
                             toggle("2");
