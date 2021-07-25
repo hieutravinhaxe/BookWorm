@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import "./product.css";
 import Pagi from "../../generals/Pagi";
 import swal from "sweetalert";
-import {toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
     Container,
     Col,
@@ -26,15 +26,18 @@ import {
 } from "reactstrap";
 import axios from "axios";
 
-toast.configure()
+toast.configure();
 export default function Product({ carts, setCarts }) {
-
-    function notiReviews(){
-        toast.info('Send reviews success!!!',{position:toast.POSITION.BOTTOM_RIGHT})
+    function notiReviews() {
+        toast.info("Send reviews success!!!", {
+            position: toast.POSITION.BOTTOM_RIGHT
+        });
     }
 
-    function notiAddToCart(){
-        toast.info('Complete push items to cart!!!',{position:toast.POSITION.TOP_RIGHT})
+    function notiAddToCart() {
+        toast.info("Complete push items to cart!!!", {
+            position: toast.POSITION.TOP_RIGHT
+        });
     }
 
     //quality of books
@@ -67,13 +70,12 @@ export default function Product({ carts, setCarts }) {
     const [star5, setStar5] = useState(0);
 
     //show and sort
-    const [showBy, setShowBy] = useState(5);
+    const [showBy, setShowBy] = useState(20);
     const [orderBy, setOrderBy] = useState(1);
     const [rateBy, setRateBy] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(null);
 
-    
     const [inCart, setInCart] = useState(false);
 
     useEffect(() => {
@@ -81,7 +83,6 @@ export default function Product({ carts, setCarts }) {
         initReviewData();
         checkInCart();
     }, [showBy, rateBy, orderBy, currentPage, inCart]);
-
 
     function initBookData() {
         axios
@@ -145,29 +146,40 @@ export default function Product({ carts, setCarts }) {
     }
 
     function upQuanlity() {
-        if(inCart){
-            carts.forEach(d =>{
-                if(d.bookId===bookId){
-                    if(d.quanlity+stateQuanlity>=8){
+        if (inCart) {
+            carts.forEach(d => {
+                if (d.bookId === bookId) {
+                    if (d.quanlity + stateQuanlity >= 8) {
                         swal({
                             title: "WARNING!",
                             text: "Amount from 1 - 8",
                             icon: "warning",
                             button: "OK"
                         });
-                    }else{
-                        setStateQuanlity(stateQuanlity + 1)
+                    } else {
+                        setStateQuanlity(stateQuanlity + 1);
                     }
                 }
-            })
+            });
+        } else {
+            if (stateQuanlity == 8) {
+                swal({
+                    title: "WARNING!",
+                    text: "Amount from 1 - 8",
+                    icon: "warning",
+                    button: "OK"
+                });
+            } else {
+                setStateQuanlity(stateQuanlity + 1);
+            }
         }
     }
 
-    function getImage($image) {
-        if ($image === undefined) {
-            return "/images/book1.jpg";
+    function getImage(image) {
+        if (image === null) {
+            return "/images/default.jpg";
         } else {
-            return "/images/" + $image + ".jpg";
+            return "/images/" + image + ".jpg";
         }
     }
 
@@ -250,12 +262,12 @@ export default function Product({ carts, setCarts }) {
                         });
                     } else {
                         d.quanlity += stateQuanlity;
-                        notiAddToCart()
+                        notiAddToCart();
                     }
                 }
             });
             localStorage.setItem("carts", JSON.stringify(carts));
-            setCarts(carts); 
+            setCarts(carts);
         } else {
             let data = {
                 bookId: bookId,
@@ -270,12 +282,20 @@ export default function Product({ carts, setCarts }) {
             let addCart = [...carts, data];
             localStorage.setItem("carts", JSON.stringify(addCart));
             setCarts([...carts, data]);
-            notiAddToCart()
+            notiAddToCart();
         }
     }
 
     function getAvgStar(avg) {
         return parseFloat(avg).toFixed(2);
+    }
+
+    function displayDate(date) {
+        let d = new Date(date);
+        let ye = new Intl.DateTimeFormat("en", { year: "numeric" }).format(d);
+        let mo = new Intl.DateTimeFormat("en", { month: "short" }).format(d);
+        let da = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(d);
+        return `${mo} ${da} ,${ye}`;
     }
 
     return (
@@ -297,8 +317,11 @@ export default function Product({ carts, setCarts }) {
                                         alt="Card image cap"
                                     />
                                     <CardBody>
+                                        <p className="float-left mr-1">
+                                            By (author){" "}
+                                        </p>
                                         <CardTitle tag="h5">
-                                            by: {authorData.author_name}
+                                            {authorData.author_name}
                                         </CardTitle>
                                     </CardBody>
                                 </Card>
@@ -329,11 +352,14 @@ export default function Product({ carts, setCarts }) {
                                         </del>
                                     )}
                                 </small>
-                                ${getAvgStar(bookData.final_price * stateQuanlity)}
+                                $
+                                {getAvgStar(
+                                    bookData.final_price * stateQuanlity
+                                )}
                             </h5>
                         </CardHeader>
                         <CardBody>
-                            <p>Quanlity:</p>
+                            <p>Quantity:</p>
                             <Col className="mt-4">
                                 <div className="input-group number-spinner">
                                     <span className="input-group-btn">
@@ -370,7 +396,7 @@ export default function Product({ carts, setCarts }) {
                                     className="w-100"
                                     onClick={() => hanleAddToCart()}
                                 >
-                                    Add to carts
+                                    Add to cart
                                 </Button>
                             </Col>
                         </CardBody>
@@ -380,19 +406,12 @@ export default function Product({ carts, setCarts }) {
             <Row className="m-3">
                 <Col md="8" className="p-4 border">
                     <Row className="header-customer-reviews">
-                        <Col md="3">
-                            <h5>Customer Reviews</h5>
-                        </Col>
-                        <Col>
-                            <span>
-                                {rateBy !== 0 && (
-                                    <p>(Filter by: {rateBy} stars)</p>
-                                )}
-                            </span>
-                        </Col>
+                        <h5 className="mr-2">Customer Reviews</h5>
+
+                        {rateBy !== 0 && <p>(Filtered by {rateBy} star)</p>}
                     </Row>
 
-                    <h4 id="avgStar">{getAvgStar(bookData.avg_rate)} Stars</h4>
+                    <h4 id="avgStar">{getAvgStar(bookData.avg_rate)} Star</h4>
                     <div className="reviewByStar mb-2">
                         <span className="mr-2">
                             <a href="" onClick={e => setRate(e, 0)}>
@@ -440,7 +459,7 @@ export default function Product({ carts, setCarts }) {
                             <Col md="4" className="d-flex">
                                 {totalPage !== 0 ? (
                                     <p>
-                                        Show {stateFrom}-{stateTo} of{" "}
+                                        Showing {stateFrom}-{stateTo} of{" "}
                                         {stateTotal} reviews
                                     </p>
                                 ) : null}
@@ -497,12 +516,12 @@ export default function Product({ carts, setCarts }) {
                                         <DropdownItem
                                             onClick={() => setSort(1)}
                                         >
-                                            Sort by date: newlest to oldest
+                                            Sort by date: newest to oldest
                                         </DropdownItem>
                                         <DropdownItem
                                             onClick={() => setSort(0)}
                                         >
-                                            Sort by date: oldest to newlest
+                                            Sort by date: oldest to newest
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </ButtonDropdown>
@@ -527,7 +546,7 @@ export default function Product({ carts, setCarts }) {
                                         <p>{d.review_details}</p>
                                     </div>
                                     <div className="reviewTime">
-                                        <p>{d.review_date}</p>
+                                        <p>{displayDate(d.review_date)}</p>
                                     </div>
                                 </Col>
                             ))}
@@ -546,7 +565,7 @@ export default function Product({ carts, setCarts }) {
                 <Col md="4">
                     <Card>
                         <CardHeader className="text-center">
-                            <h5>Write a review</h5>
+                            <h5>Write a Review</h5>
                         </CardHeader>
                         <CardBody>
                             <Form onSubmit={e => handleSubmitForm(e)}>
@@ -557,6 +576,7 @@ export default function Product({ carts, setCarts }) {
                                     <Input
                                         required
                                         type="text"
+                                        maxLength="120"
                                         name="inputTitle"
                                         id="inputTitle"
                                         placeholder="Enter title"
@@ -583,11 +603,11 @@ export default function Product({ carts, setCarts }) {
                                         name="select"
                                         id="selectStar"
                                     >
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                        <option value="1">1 star</option>
+                                        <option value="2">2 star</option>
+                                        <option value="3">3 star</option>
+                                        <option value="4">4 star</option>
+                                        <option value="5">5 star</option>
                                     </Input>
                                 </FormGroup>
                                 <Button

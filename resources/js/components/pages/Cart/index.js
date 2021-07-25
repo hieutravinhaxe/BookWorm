@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import ThankYou from "./ThankYou.js";
 import swal from "sweetalert";
+import { toast } from "react-toastify";
 import "./cart.css";
 import {
     Container,
@@ -15,6 +16,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 
+toast.configure()
 export default function Cart({ carts, setCarts }) {
     let history = useHistory();
 
@@ -24,16 +26,22 @@ export default function Cart({ carts, setCarts }) {
 
     const [cartsTemp, setCartsTemp] = useState(carts);
 
-    const [errBook, setErrBook] = useState([]);
-    const [succBook, setSuccBook] = useState([]);
+    // const [errBook, setErrBook] = useState([]);
+    // const [succBook, setSuccBook] = useState([]);
 
     //let tempt = [...cartsTemp]
+    function waitToast(){
+        toast.info("Wait seconds!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose:2000
+        });
+    }
 
     useEffect(() => {}, [cartsTemp]);
 
     function getImage(image) {
         if (image === null) {
-            return "/images/book1.jpg";
+            return "/images/default.jpg";
         } else {
             return "/images/" + image + ".jpg";
         }
@@ -178,21 +186,17 @@ export default function Cart({ carts, setCarts }) {
                             successBook.forEach((d, index) => {
                                 if (addItemToOrder(res.data.order.id, d)) {
                                     tempBook = tempBook.slice(index, 1);
-                                    localStorage.setItem(
-                                        "carts",
-                                        JSON.stringify(tempBook)
-                                    );
                                     setCartsTemp(tempBook);
                                 }
                             });
-                            setCarts([]);
-                            setCompleteOrder(true);
                         }
                     })
                     .catch(error => {
                         console.log(error);
                     });
-
+                localStorage.setItem("carts", JSON.stringify([]));
+                setCarts([]);
+                setCompleteOrder(true);
             }
         }
     }
@@ -212,6 +216,7 @@ export default function Cart({ carts, setCarts }) {
                 })
                 .catch(error => console.log(error));
         });
+        waitToast();
         setTimeout(function wait() {
             solveHandleAdd(successBook, errorBook);
         }, 2000);
@@ -223,10 +228,13 @@ export default function Cart({ carts, setCarts }) {
 
     return completeOrder === false ? (
         <div className="cart p-5">
-            <h4>Your carts: {carts.length} {(carts.length==0)||(carts.length==1)?'item':'items'}</h4>
+            <h4>
+                Your cart: {carts.length}{" "}
+                {carts.length == 0 || carts.length == 1 ? "item" : "items"}
+            </h4>
             <hr className="w-100" />
             {cartsTemp.length != 0 ? (
-                <Container className="container-fluid">
+                <div>
                     <Row>
                         <Col md="9">
                             <Table className="table-striped">
@@ -234,7 +242,7 @@ export default function Cart({ carts, setCarts }) {
                                     <tr>
                                         <th scope="col">Product</th>
                                         <th scope="col">Price</th>
-                                        <th scope="col">Quanlity</th>
+                                        <th scope="col">Quantity</th>
                                         <th scope="col">Total</th>
                                     </tr>
                                 </thead>
@@ -350,7 +358,7 @@ export default function Cart({ carts, setCarts }) {
                         </Col>
                         <Col md="3">
                             <Card className="text-center">
-                                <CardHeader>Carts Total</CardHeader>
+                                <CardHeader>Cart Totals</CardHeader>
                                 <CardBody>
                                     <h5 id="totalPrice" className="card-title">
                                         ${displayPrice(getTotalPrice())}
@@ -367,7 +375,7 @@ export default function Cart({ carts, setCarts }) {
                             </Card>
                         </Col>
                     </Row>
-                </Container>
+                </div>
             ) : (
                 <div className="none-items"></div>
             )}

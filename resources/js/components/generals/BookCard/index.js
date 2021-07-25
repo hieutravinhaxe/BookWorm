@@ -16,7 +16,7 @@ export default function BookCard(props) {
 
     function getImage($image) {
         if ($image === null) {
-            return "/images/book1.jpg";
+            return "/images/default.jpg";
         } else {
             return "/images/" + $image + ".jpg";
         }

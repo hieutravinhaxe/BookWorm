@@ -57,7 +57,7 @@ export default function FeaturedBooks() {
 
     return (
         <Container className="featuredBooks mt-5">
-            <h3 className="text-center">Feature Book</h3>
+            <h3 className="text-center">Featured Books</h3>
             <Nav tabs className="justify-content-center">
                 <NavItem className="mb-3 mr-1">
                     <Button

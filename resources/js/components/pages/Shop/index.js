@@ -16,8 +16,7 @@ import {
 import { Accordion, Button, ButtonGroup } from "react-bootstrap";
 import BookCard from "../../generals/BookCard";
 
-export default function Shop({onSale}) {
-
+export default function Shop({ onSale }) {
     const [dropdownOpenOrder, setOpenOrder] = useState(false);
     const toggleOrder = () => setOpenOrder(!dropdownOpenOrder);
 
@@ -32,7 +31,7 @@ export default function Shop({onSale}) {
     const [authorBy, setAuthorBy] = useState(0);
     const [categoryBy, setCategoryBy] = useState(0);
     const [rateBy, setRateBy] = useState(0);
-    const [showBy, setShowBy] = useState(15);
+    const [showBy, setShowBy] = useState(20);
     const [sortBy, setSortBy] = useState(onSale);
 
     // books list
@@ -55,10 +54,6 @@ export default function Shop({onSale}) {
         initCategotyList();
         initBookList();
     }, [rateBy, categoryBy, authorBy, showBy, sortBy, currentPage]);
-
-    function setOnSale(){
-        setSort(1)
-    }
 
     function initBookList() {
         let url = "/api/books";
@@ -120,7 +115,7 @@ export default function Shop({onSale}) {
     function setFilterRate(rate) {
         setRateBy(rate);
         if (rate !== null) {
-            setBreadStar("Filter by : " + rate + " stars");
+            setBreadStar("rating : " + rate + " Star");
         } else {
             setBreadStar(null);
         }
@@ -130,7 +125,7 @@ export default function Shop({onSale}) {
     function setFilterAuthor(author, authorName) {
         setAuthorBy(author);
         if (authorName !== null) {
-            setBreadAuthor("Filter author by : " + authorName);
+            setBreadAuthor("author: " + authorName);
         } else {
             setBreadAuthor(null);
         }
@@ -140,7 +135,7 @@ export default function Shop({onSale}) {
     function setFilterCate(cate, cateName) {
         setCategoryBy(cate);
         if (cateName !== null) {
-            setBreadCate("Filter category by: " + cateName);
+            setBreadCate("category: " + cateName);
         } else {
             setBreadCate(null);
         }
@@ -163,7 +158,7 @@ export default function Shop({onSale}) {
             case 0:
                 return " A_Z";
             case 1:
-                return " onsale";
+                return " on sale";
             case 2:
                 return " popularity";
             case 3:
@@ -177,9 +172,10 @@ export default function Shop({onSale}) {
         <>
             <div className="shopzen pt-5 px-5 mt-3">
                 <Breadcrumb>
-                    <BreadcrumbItem active>
-                        <h3>Books</h3>
-                    </BreadcrumbItem>
+                    {/* <BreadcrumbItem active> */}
+                        <h3>Books </h3>
+                    {/* </BreadcrumbItem> */}
+                    {((breadcrumbAuthor !== null)||(breadcrumbCate !== null)||(breadcrumbStar !== null))?<p className="pt-2 mx-2">(Filtered by</p>:null}
                     {breadcrumbAuthor !== null && (
                         <BreadcrumbItem active className="pt-2">
                             {breadcrumbAuthor}
@@ -195,6 +191,8 @@ export default function Shop({onSale}) {
                             {breadcrumbStar}
                         </BreadcrumbItem>
                     )}
+                    {((breadcrumbAuthor !== null)||(breadcrumbCate !== null)||(breadcrumbStar !== null))?<p className="pt-2 ml-2">)</p>:null}
+                    
                 </Breadcrumb>
 
                 <hr className="w-100" />
@@ -203,53 +201,23 @@ export default function Shop({onSale}) {
                 <Row>
                     <Col md="3">
                         <h4 className="ml-4">Filter by</h4>
-                        <Accordion defaultActiveKey="0">
-                            <Accordion.Toggle
-                                as={Button}
-                                variant="outline-primary"
-                                eventKey="0"
-                                className="w-100 mb-3"
-                            >
-                                Authors
-                            </Accordion.Toggle>
-                            <Accordion.Collapse eventKey="0" className="mb-2">
-                                <ButtonGroup vertical className="w-100">
-                                    <Button
-                                    className={authorBy==0?"active cate-name":"cate-name"}
-                                        onClick={() =>
-                                            setFilterAuthor(null, null)
-                                        }
-                                    >
-                                        All
-                                    </Button>
-                                    {authorList.map(d => (
-                                        <Button className="author-name"
-                                            className={authorBy==d.id?"active":null}
-                                            onClick={() =>
-                                                setFilterAuthor(
-                                                    d.id,
-                                                    d.author_name
-                                                )
-                                            }
-                                            key={d.id}
-                                        >
-                                            {d.author_name}
-                                        </Button>
-                                    ))}
-                                </ButtonGroup>
-                            </Accordion.Collapse>
+                        <Accordion>
                             <Accordion.Toggle
                                 as={Button}
                                 variant="outline-primary"
                                 eventKey="1"
                                 className="w-100 mb-3"
                             >
-                                Categories
+                                Category
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="1" className=" mb-2">
                                 <ButtonGroup vertical className="w-100">
                                     <Button
-                                        className={categoryBy==0?"active cate-name":"cate-name"}
+                                        className={
+                                            categoryBy == 0
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
                                         onClick={() =>
                                             setFilterCate(null, null)
                                         }
@@ -258,7 +226,11 @@ export default function Shop({onSale}) {
                                     </Button>
                                     {categoryList.map(c => (
                                         <Button
-                                            className={categoryBy==c.id?"active cate-name":"cate-name"}
+                                            className={
+                                                categoryBy == c.id
+                                                    ? "active cate-name"
+                                                    : "cate-name"
+                                            }
                                             onClick={() =>
                                                 setFilterCate(
                                                     c.id,
@@ -275,43 +247,116 @@ export default function Shop({onSale}) {
                             <Accordion.Toggle
                                 as={Button}
                                 variant="outline-primary"
+                                eventKey="0"
+                                className="w-100 mb-3"
+                            >
+                                Author
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="0" className="mb-2">
+                                <ButtonGroup vertical className="w-100">
+                                    <Button
+                                        className={
+                                            authorBy == 0
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
+                                        onClick={() =>
+                                            setFilterAuthor(null, null)
+                                        }
+                                    >
+                                        All
+                                    </Button>
+                                    {authorList.map(d => (
+                                        <Button
+                                            className="author-name"
+                                            className={
+                                                authorBy == d.id
+                                                    ? "active"
+                                                    : null
+                                            }
+                                            onClick={() =>
+                                                setFilterAuthor(
+                                                    d.id,
+                                                    d.author_name
+                                                )
+                                            }
+                                            key={d.id}
+                                        >
+                                            {d.author_name}
+                                        </Button>
+                                    ))}
+                                </ButtonGroup>
+                            </Accordion.Collapse>
+
+                            <Accordion.Toggle
+                                as={Button}
+                                variant="outline-primary"
                                 eventKey="2"
                                 className="w-100 mb-3 "
                             >
-                                Rating
+                                Rating Review
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey="2" className="mb-2">
                                 <ButtonGroup vertical className="w-100">
-                                    <Button 
-                                    className={rateBy==0?"active cate-name":"cate-name"}
-                                    onClick={() => setFilterRate(null)}>
-                                        All rating
+                                    <Button
+                                        className={
+                                            rateBy == 0
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
+                                        onClick={() => setFilterRate(null)}
+                                    >
+                                        All
                                     </Button>
                                     <Button
-                                    className={rateBy==1?"active cate-name":"cate-name"}
-                                    onClick={() => setFilterRate(1)}>
+                                        className={
+                                            rateBy == 1
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
+                                        onClick={() => setFilterRate(1)}
+                                    >
                                         1 star
                                     </Button>
-                                    <Button 
-                                    className={rateBy==2?"active cate-name":"cate-name"}
-                                    
-                                    onClick={() => setFilterRate(2)}>
-                                        2 stars
+                                    <Button
+                                        className={
+                                            rateBy == 2
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
+                                        onClick={() => setFilterRate(2)}
+                                    >
+                                        2 star
                                     </Button>
                                     <Button
-                                    className={rateBy==3?"active cate-name":"cate-name"}
-                                    onClick={() => setFilterRate(3)}>
-                                        3 stars
+                                        className={
+                                            rateBy == 3
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
+                                        onClick={() => setFilterRate(3)}
+                                    >
+                                        3 star
                                     </Button>
-                                    <Button 
-                                    className={rateBy==4?"active cate-name":"cate-name"}
-                                    onClick={() => setFilterRate(4)}>
-                                        4 stars
+                                    <Button
+                                        className={
+                                            rateBy == 4
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
+                                        onClick={() => setFilterRate(4)}
+                                    >
+                                        4 star
                                     </Button>
-                                    <Button 
-                                    className={rateBy==5?"active cate-name":"cate-name"}
-                                    onClick={() => setFilterRate(5)}>
-                                        5 stars
+                                    <Button
+                                        className={
+                                            rateBy == 5
+                                                ? "active cate-name"
+                                                : "cate-name"
+                                        }
+                                        onClick={() => setFilterRate(5)}
+                                    >
+                                        5 star
                                     </Button>
                                 </ButtonGroup>
                             </Accordion.Collapse>
@@ -323,7 +368,7 @@ export default function Shop({onSale}) {
                                 <Col md="7" className="d-flex">
                                     {stateTotal != 0 ? (
                                         <p>
-                                            Show{" "}
+                                            Showing{" "}
                                             {stateTotal > 0 ? stateFrom : 0}-
                                             {stateTo} of {stateTotal} books
                                         </p>
