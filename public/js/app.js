@@ -3569,58 +3569,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ About)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _generals_Nav__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../generals/Nav */ "./resources/js/components/generals/Nav/index.js");
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/Container.js");
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/Row.js");
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/Col.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/Container.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/Row.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/Col.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
 
 
-
-
-function About(_ref) {
-  var carts = _ref.carts,
-      setCarts = _ref.setCarts;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+function About() {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
     className: "about p-5 mt-4",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h4", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h4", {
       children: "About Us"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("hr", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("hr", {
       className: "w-100"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h2", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h2", {
       className: "text-center ",
       children: "Welcome to Bookworm"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-      className: "mx-4",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
           lg: "12",
           className: "m-5",
           children: "\"Bookworm is an independent New York bokkstore and language school with locations in Manhattan and Brooklyn. We specialize in travel books and language classes\""
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
           lg: "6",
           className: "pl-5",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
             children: "Our Story"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
             children: "The name Bookworm was taken from the original name for New York Internationnal Airport, which was renamed JFK in Decenber 1963"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
             children: "Our Manhattan store has just moved to the West Village. Our new location to 170 7th Avenue South, at the comer of Perry Street."
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
             children: "From March 2008 through May 2016, the store was loacted in the Flatiron District"
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(reactstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
           lg: "6",
           className: "pl-5 pr-5",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
             children: "Our Vision"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
             children: "One of the last travel bookstores in the country, our Manhattan store carrles a range of guldebooks (all 10% off) to sult the needs and tastes of every traveler and budget."
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
             children: "We believe that a novel or travelogue can be just as valuable a key to place as any guidebook, and our well-read, wel-traveled staff is happy to make reading recommendations for any traveler, book lover, or gift giver."
           })]
         })]
@@ -4355,22 +4349,32 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+ // const breakPoints = [
+//     { width: 1, itemsToShow: 1 },
+//     { width: 150, itemsToShow: 2 },
+//     { width: 400, itemsToShow: 3 },
+//     { width: 800, itemsToShow: 4 }
+// ];
 
 
 
 
 var breakPoints = [{
   width: 1,
-  itemsToShow: 1
+  itemsToShow: 1,
+  itemsToScroll: 1
 }, {
   width: 150,
-  itemsToShow: 2
+  itemsToShow: 2,
+  itemsToScroll: 2
 }, {
   width: 400,
-  itemsToShow: 3
+  itemsToShow: 3,
+  itemsToScroll: 3
 }, {
   width: 800,
-  itemsToShow: 4
+  itemsToShow: 4,
+  itemsToScroll: 4
 }];
 function Home(_ref) {
   var carts = _ref.carts,
@@ -4387,7 +4391,7 @@ function Home(_ref) {
   }, []);
 
   function initOnSaleData() {
-    axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/books?limit=10&page=1&orderSPrice=1").then(function (res) {
+    axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/books?limit=10&page=1&orderSPrice=1&orderFPrice=0").then(function (res) {
       //const bookOnSale = res.data;
       if (res.status === 200) {
         setOnSaleList(res.data.data);
@@ -4426,6 +4430,8 @@ function Home(_ref) {
           })
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_elastic_carousel__WEBPACK_IMPORTED_MODULE_3__.default, {
+        enableAutoPlay: true,
+        autoPlaySpeed: 5000,
         breakPoints: breakPoints,
         children: onSaleList.map(function (d) {
           return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_generals_BookCard__WEBPACK_IMPORTED_MODULE_2__.default, {
@@ -5411,9 +5417,7 @@ function Shop(_ref) {
     initAuthorList();
     initCategotyList();
     initBookList();
-  }, [rateBy, categoryBy, authorBy, showBy, sortBy, currentPage]); // function setOnSale() {
-  //     setSort(1);
-  // }
+  }, [rateBy, categoryBy, authorBy, showBy, sortBy, currentPage]);
 
   function initBookList() {
     var url = "/api/books";
@@ -5432,7 +5436,7 @@ function Shop(_ref) {
     }
 
     if (sortBy == 1) {
-      url = url + "&orderSPrice=1";
+      url = url + "&orderSPrice=1$orderFPrice=0";
     } else if (sortBy == 2) {
       url = url + "&orderReviews=1&orderFPrice=0";
     } else if (sortBy == 3) {

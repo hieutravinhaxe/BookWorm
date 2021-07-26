@@ -7,11 +7,17 @@ import { Row, Col, Container, Button } from "reactstrap";
 import FeaturedBooks from "./FeaturedBooks.js";
 import './home.css';
 
+// const breakPoints = [
+//     { width: 1, itemsToShow: 1 },
+//     { width: 150, itemsToShow: 2 },
+//     { width: 400, itemsToShow: 3 },
+//     { width: 800, itemsToShow: 4 }
+// ];
 const breakPoints = [
-    { width: 1, itemsToShow: 1 },
-    { width: 150, itemsToShow: 2 },
-    { width: 400, itemsToShow: 3 },
-    { width: 800, itemsToShow: 4 }
+    { width: 1, itemsToShow: 1,itemsToScroll:1  },
+    { width: 150, itemsToShow: 2 ,itemsToScroll: 2 },
+    { width: 400, itemsToShow: 3,itemsToScroll: 3 },
+    { width: 800, itemsToShow: 4 ,itemsToScroll: 4 }
 ];
 
 export default function Home({carts, setCarts}) {
@@ -26,7 +32,7 @@ export default function Home({carts, setCarts}) {
 
     function initOnSaleData() {
         axios
-            .get(`/api/books?limit=10&page=1&orderSPrice=1`)
+            .get(`/api/books?limit=10&page=1&orderSPrice=1&orderFPrice=0`)
             .then(res => {
                 //const bookOnSale = res.data;
                 if (res.status === 200) {
@@ -53,7 +59,7 @@ export default function Home({carts, setCarts}) {
                     </Col>
                 </Row>
                 {/* <!-- carousel muti items --> */}
-                <Carousel breakPoints={breakPoints}>
+                <Carousel enableAutoPlay autoPlaySpeed={5000} breakPoints={breakPoints}>
                     {onSaleList.map(d => (
                         <BookCard
                             bookTitle={d.book_title}

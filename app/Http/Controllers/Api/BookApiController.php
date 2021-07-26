@@ -36,14 +36,14 @@ class BookApiController extends Controller
         $result =  Book::select('books.id','books.book_title','authors.author_name','books.book_price','books.book_cover_photo')
                     ->avgStar()
                     ->allPrice()
-                    ->groupBy('books.id','authors.author_name')
+                    ->groupBy('books.id','authors.id')
                     ->filterAuthor($filterByAuthor)
                     ->filterCate($filterByCategory)
                     ->filterRate($filterByRate)
                     ->orderRate($orderByRate)
                     ->orderByNumReviews($orderByNumReviews)
-                    ->orderByFinalPrice($orderByFinalPrice)
                     ->orderBySubPrice($orderBySubPrice)
+                    ->orderByFinalPrice($orderByFinalPrice)
                     ->orderBy('books.book_title')
                     ->leftJoin('authors','authors.id','books.author_id');
         $total = $result->get()->count();

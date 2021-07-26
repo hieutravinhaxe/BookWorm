@@ -1,16 +1,14 @@
-import React, { Component } from "react";
-import Navigation from "../../generals/Nav";
-import { BrowserRouter } from "react-router-dom";
+import React from "react";
 import {Container, Row, Col} from "reactstrap";
 
-export default function About({carts, setCarts}) {
+export default function About() {
 
     return (
         <div className="about p-5 mt-4">
             <h4>About Us</h4>
             <hr className="w-100" />
             <h2 className="text-center ">Welcome to Bookworm</h2>
-            <Container className="mx-4">
+            <Container>
                 <Row>
                     <Col lg="12" className="m-5">
                         "Bookworm is an independent New York bokkstore and

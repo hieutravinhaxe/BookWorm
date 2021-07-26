@@ -68,7 +68,7 @@ export default function Shop({ onSale }) {
             url = url + "&category=" + categoryBy;
         }
         if (sortBy == 1) {
-            url = url + "&orderSPrice=1";
+            url = url + "&orderSPrice=1$orderFPrice=0";
         } else if (sortBy == 2) {
             url = url + "&orderReviews=1&orderFPrice=0";
         } else if (sortBy == 3) {

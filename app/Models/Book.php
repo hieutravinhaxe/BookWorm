@@ -45,9 +45,10 @@ class Book extends Model
     {
         return $query->leftJoin('discounts', function ($join) {
             $join->on('discounts.book_id', '=', 'books.id')
-                ->whereNotNull('discounts.discount_start_date')
+                //->whereNotNull('discounts.discount_start_date')
+                ->where('discounts.discount_start_date','<=','now()')
                 ->where(function ($query) {
-                    $query->whereNotNull('discounts.discount_end_date')
+                    $query->whereNull('discounts.discount_end_date')
                         ->orWhere('discounts.discount_end_date', '>=', 'now()');
                 });
         })
